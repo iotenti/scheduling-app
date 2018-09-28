@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta
 import unittest
 from app import create_app, db
-from app.models import User, Post
+from app.models import Teachers, Post
 from config import Config
 
 
@@ -24,20 +24,20 @@ class UserModelCase(unittest.TestCase):
         self.app_context.pop()
 
     def test_password_hashing(self):
-        u = User(username='susan')
+        u = Teachers(username='susan')
         u.set_password('cat')
         self.assertFalse(u.check_password('dog'))
         self.assertTrue(u.check_password('cat'))
 
     def test_avatar(self):
-        u = User(username='john', email='john@example.com')
+        u = Teachers(username='john', email='john@example.com')
         self.assertEqual(u.avatar(128), ('https://www.gravatar.com/avatar/'
                                          'd4c74594d841139328695756648b6bd6'
                                          '?d=identicon&s=128'))
 
     def test_follow(self):
-        u1 = User(username='john', email='john@example.com')
-        u2 = User(username='susan', email='susan@example.com')
+        u1 = Teachers(username='john', email='john@example.com')
+        u2 = Teachers(username='susan', email='susan@example.com')
         db.session.add(u1)
         db.session.add(u2)
         db.session.commit()
@@ -60,10 +60,10 @@ class UserModelCase(unittest.TestCase):
 
     def test_follow_posts(self):
         # create four users
-        u1 = User(username='john', email='john@example.com')
-        u2 = User(username='susan', email='susan@example.com')
-        u3 = User(username='mary', email='mary@example.com')
-        u4 = User(username='david', email='david@example.com')
+        u1 = Teachers(username='john', email='john@example.com')
+        u2 = Teachers(username='susan', email='susan@example.com')
+        u3 = Teachers(username='mary', email='mary@example.com')
+        u4 = Teachers(username='david', email='david@example.com')
         db.session.add_all([u1, u2, u3, u4])
 
         # create four posts
