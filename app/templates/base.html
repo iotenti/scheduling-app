@@ -19,7 +19,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url_for('main.index') }}">Home</a></li>
-                    <li><a href="#">link</a></li>
+                    <li><a href="{{ url_for('main.sign_up') }}">Sign Up!</a></li>
                 </ul>
                 
                 {% if g.search_form %}

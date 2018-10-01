@@ -37,7 +37,8 @@ def register():
         return redirect(url_for('main.index'))
     form = TeacherRegistrationForm()
     if form.validate_on_submit():
-        user = Teachers(username=form.username.data, 
+        user = Teachers(
+                    username=form.username.data, 
                     email=form.email.data, 
                     first_name=form.first_name.data,
                     last_name=form.last_name.data,
@@ -47,7 +48,7 @@ def register():
                     state=form.state.data,
                     zipcode=form.zipcode.data,
                     notes=form.notes.data
-                    )
+                )
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
