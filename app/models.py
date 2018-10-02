@@ -89,13 +89,14 @@ class Accounts(db.Model):  # needs key constrains
     l_name1 = db.Column(db.String(50))
     cell_phone1 = db.Column(db.String(10))
     email1 = db.Column(db.String(120))
+    home_phone1 = db.Column(db.String(10), nullable=True)
     f_name2 = db.Column(db.String(50), nullable=True) 
     l_name2 = db.Column(db.String(50), nullable=True)
     cell_phone2 = db.Column(db.String(10), nullable=True)
     email2 = db.Column(db.String(120), nullable=True)
     account_bal = db.Column(db.Float(10))
     account_credit = db.Column(db.Float(10))
-    home_phone = db.Column(db.String(10), nullable=True)
+    home_phone2 = db.Column(db.String(10), nullable=True)
     # add bool archive col
 
 

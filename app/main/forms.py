@@ -5,18 +5,23 @@ from app.models import Students, Teachers, Instruments
 from wtforms_alchemy import QuerySelectField
 
 
-class AddAccountForm(FlaskForm):
+class AddAccountPrimaryForm(FlaskForm):
     f_name1 = StringField('First Name', validators=[DataRequired()])
     l_name1 = StringField('Last Name', validators=[DataRequired()])
     cell_phone1 = StringField('Cell')
     email1 = StringField('Email')
+    home_phone1 = StringField('Home Phone')
+    submit = SubmitField('Next')
+# FIGURE OUT HOW TO MAKE AT LEAST 1 PHONE NUMBER REQUIRED #
+
+
+class AddAccountSecondaryForm(FlaskForm):
     f_name2 = StringField('First Name')
     l_name2 = StringField('Last Name')
     cell_phone2 = StringField('Cell')
     email2 = StringField('Email')
-    home_phone = StringField('Home Phone')
-    submit = SubmitField('Next')
-# FIGURE OUT HOW TO MAKE AT LEAST 1 PHONE NUMBER REQUIRED #
+    home_phone2 = StringField('Home Phone')
+    submit = SubmitField('submit')
 
 
 class AddStudentForm(FlaskForm):
@@ -28,10 +33,10 @@ class AddStudentForm(FlaskForm):
         return Instruments.query
 
     # account_ID = account
-    teacher_ID = QuerySelectField('Select Teacher...', render_kw={"placeholder": "Select Teacher..."}, query_factory=get_teachers, allow_blank=False)
+    teacher_ID = QuerySelectField('Select Teacher...', query_factory=get_teachers, allow_blank=True, validators=[DataRequired()])
     first_name = StringField('First Name', render_kw={"placeholder": "First Name"}, validators=[DataRequired()])
     last_name = StringField('Last Name', render_kw={"placeholder": "Last Name"}, validators=[DataRequired()])
-    instrument = QuerySelectField('Select Instrument...', render_kw={"placeholder": "Select Instrument..."}, query_factory=get_instruments, allow_blank=False)
+    instrument = QuerySelectField('Select Instrument...', query_factory=get_instruments, allow_blank=True, validators=[DataRequired()])
     notes = TextAreaField('Notes', render_kw={'placeholder': 'Notes'}, validators=[DataRequired()])
     submit = SubmitField('Add Student')
 

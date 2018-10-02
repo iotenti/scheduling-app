@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from app import db
 from app.models import Teachers, Accounts, Students, Instruments
 from app.main import bp
-from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm
+from app.main.forms import AddAccountPrimaryForm, AddAccountSecondaryForm, AddStudentForm, AddInstrumentForm
 
 
 @bp.route('/')
@@ -22,21 +22,23 @@ def index():
 @bp.route('/sign_up', methods=['GET', 'POST'])
 @login_required
 def sign_up():
-    form = AddAccountForm()
+    PrimaryForm = AddAccountPrimaryForm()
+    SecondaryForm = AddAccountSecondaryForm()
     # if from validates
     if form.validate_on_submit():
         # provide logic as to not duplicate account
         # provide logid to hide half of form unless second contact needed
         account = Accounts(
-            f_name1=form.f_name1.data,
-            l_name1=form.l_name1.data,
-            cell_phone1=form.cell_phone1.data,
-            email1=form.email1.data,
-            f_name2=form.f_name2.data,
-            l_name2=form.l_name2.data,
-            cell_phone2=form.cell_phone2.data,
-            email2=form.email2.data,
-            home_phone=form.home_phone.data
+            f_name1=PrimaryForm.f_name1.data,
+            l_name1=PrimaryForm.l_name1.data,
+            cell_phone1=PrimaryForm.cell_phone1.data,
+            email1=PrimaryForm.email1.data,
+            home_phone1=PrimaryForm.home_phone.data,
+            f_name2=SecondaryForm.f_name2.data,
+            l_name2=SecondaryForm.l_name2.data,
+            cell_phone2=SecondaryForm.cell_phone2.data,
+            email2=SecondaryForm.email2.data,
+            home_phone2=SecondaryForm.home_phone.data
         )
         db.session.add(account)
         db.session.commit()
@@ -52,7 +54,7 @@ def sign_up():
         # else:
         #     flash('This account already exists')
         #     return redirect(url_for('main.index')) # or somewhere more relevent
-    return render_template('add_account.html', title='Sign Up', form=form)
+    return render_template('add_account.html', title='Sign Up', PrimaryForm=PrimaryForm, SecondaryForm=SecondaryForm)
 
 
 @bp.route('/add_student', methods=['GET', 'POST'])
