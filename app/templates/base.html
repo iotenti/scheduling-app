@@ -21,6 +21,8 @@
                     <li><a href="{{ url_for('main.index') }}">Home</a></li>
                     <li><a href="{{ url_for('main.sign_up') }}">Sign Up!</a></li>
                     <li><a href="{{ url_for('main.add_student') }}">add stu!</a></li>
+                    <!-- make admin only link -->
+                    <li><a href="{{ url_for('main.add_instrument') }}">add instrument</a></li>
                 </ul>
                 
                 {% if g.search_form %}

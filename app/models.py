@@ -22,6 +22,7 @@ class Teachers(UserMixin, db.Model):
     zipcode = db.Column(db.String(5))
     notes = db.Column(db.String(500))
     # add admin field
+    # format first and last name to capitalize
 
     def __repr__(self):
         return '{} {}'.format(self.first_name, self.last_name)
@@ -59,7 +60,7 @@ def load_user(id):
 
 
 class Instruments(db.Model):
-    id = db.Column(db.Integer, primary_key=True),
+    id = db.Column(db.Integer, primary_key=True)
     instrument = db.Column(db.String(50))
     # make form to add instruments in admin section
 
@@ -67,7 +68,7 @@ class Instruments(db.Model):
         return '{}'.format(self.instrument)
 
 
-class Students(db.Model):
+class Students(db.Model):  # needs key constraints, I think
     id = db.Column(db.Integer, primary_key=True)
     account_ID = db.Column(db.Integer, db.ForeignKey('accounts.id'))
     teacher_ID = db.Column(db.Integer, db.ForeignKey('teachers.id'))
@@ -78,14 +79,17 @@ class Students(db.Model):
     notes = db.Column(db.String(500))
     # add bool archive col
 
+    def __repr__(self):
+        return '{} {} - {}'.format(self.first_name, self.last_name, self.instrument)
 
-class Accounts(db.Model):  # NEEDS RELATIONSHIPS DEFINED ##
+
+class Accounts(db.Model):  # needs key constrains
     id = db.Column(db.Integer, primary_key=True)
     f_name1 = db.Column(db.String(50))
     l_name1 = db.Column(db.String(50))
     cell_phone1 = db.Column(db.String(10))
     email1 = db.Column(db.String(120))
-    f_name2 = db.Column(db.String(50), nullable=True)  
+    f_name2 = db.Column(db.String(50), nullable=True) 
     l_name2 = db.Column(db.String(50), nullable=True)
     cell_phone2 = db.Column(db.String(10), nullable=True)
     email2 = db.Column(db.String(120), nullable=True)
@@ -100,6 +104,7 @@ class Attendence(db.Model):
     student_ID = db.Column(db.Integer, db.ForeignKey('students.id'))
     account_ID = db.Column(db.Integer, db.ForeignKey('accounts.id'))
     was_present = db.Column(db.TIMESTAMP(50))
+    #  Maybe make this an association table
 
 
 class Invoices(db.Model):
@@ -110,6 +115,4 @@ class Invoices(db.Model):
     payment_total = db.Column(db.Float(10))
     invoice_due_date = db.Column(db.DateTime(50))
     payment_date = db.Column(db.DateTime(50))
-
-
 
