@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField
+from wtforms import StringField, SubmitField, TextAreaField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Length
-from app.models import Students
+from app.models import Students, Teachers
+from wtforms_alchemy import QuerySelectField
 
 
 class AddAccountForm(FlaskForm):
@@ -19,8 +20,13 @@ class AddAccountForm(FlaskForm):
 
 
 class AddStudentForm(FlaskForm):
-    # account_ID = DROPDOWN
-    # teacher_ID = DROPDOWN
+
+    def get_teachers():
+        return Teachers.query
+
+    # account_ID = account
+    teacher_ID = QuerySelectField('select teacher...', query_factory=get_teachers, allow_blank=False)
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
     notes = TextAreaField('Notes', validators=[DataRequired()])
+    submit = SubmitField('Add Student')

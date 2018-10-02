@@ -21,9 +21,10 @@ class Teachers(UserMixin, db.Model):
     state = db.Column(db.String(2))
     zipcode = db.Column(db.String(5))
     notes = db.Column(db.String(500))
+    # add admin field
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return '{} {}'.format(self.first_name, self.last_name)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -57,6 +58,15 @@ def load_user(id):
     return Teachers.query.get(int(id))
 
 
+class Instruments(db.Model):
+    id = db.Column(db.Integer, primary_key=True),
+    instrument = db.Column(db.String(50))
+    # make form to add instruments in admin section
+
+    def __repr__(self):
+        return '{}'.format(self.instrument)
+
+
 class Students(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     account_ID = db.Column(db.Integer, db.ForeignKey('accounts.id'))
@@ -64,7 +74,9 @@ class Students(db.Model):
     attendence_ID = db.Column(db.Integer, db.ForeignKey('attendence.id'))
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
+    instrument = db.Column(db.String(50))
     notes = db.Column(db.String(500))
+    # add bool archive col
 
 
 class Accounts(db.Model):  # NEEDS RELATIONSHIPS DEFINED ##
@@ -80,6 +92,7 @@ class Accounts(db.Model):  # NEEDS RELATIONSHIPS DEFINED ##
     account_bal = db.Column(db.Float(10))
     account_credit = db.Column(db.Float(10))
     home_phone = db.Column(db.String(10), nullable=True)
+    # add bool archive col
 
 
 class Attendence(db.Model):
@@ -97,3 +110,6 @@ class Invoices(db.Model):
     payment_total = db.Column(db.Float(10))
     invoice_due_date = db.Column(db.DateTime(50))
     payment_date = db.Column(db.DateTime(50))
+
+
+

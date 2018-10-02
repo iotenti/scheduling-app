@@ -3,11 +3,13 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextA
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import Teachers
 
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember me')
     submit = SubmitField('Sign In')
+
 
 class TeacherRegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -17,13 +19,12 @@ class TeacherRegistrationForm(FlaskForm):
     phone_num = StringField('Phone Number', validators=[DataRequired()])
     address = StringField('Address', validators=[DataRequired()])
     city = StringField('City', validators=[DataRequired()])
-    state = StringField('State', validators=[DataRequired()] )
+    state = StringField('State', validators=[DataRequired()])
     zipcode = StringField('Zip Code', validators=[DataRequired()])
     notes = TextAreaField('Notes', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Add Teacher')
-
 
     def validate_username(self, username):
         user = Teachers.query.filter_by(username=username.data).first()

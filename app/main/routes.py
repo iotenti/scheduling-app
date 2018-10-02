@@ -13,41 +13,15 @@ from pprint import pprint, PrettyPrinter
 @login_required
 def index():
 
-    teacher = Teachers.query.all()
-    for teach in teacher:
-
-        print(teach.id)
-        print(teach.username)
-        print(teach.email)
-        print(teach.password_hash)
-        print(teach.first_name)
-        print(teach.last_name)
-        print(teach.phone_num)
-        print(teach.address)
-        print(teach.zipcode)
-        print(teach.city)
-        print(teach.state)
-        print(teach.notes)
-
-    accounts = Accounts.query.all()
-    if accounts is None:
-        accounts = "hi"
-        print(accounts)
-    else:
-        for account in accounts:
-            print(account.id)
-            print(account.f_name1)
-            print(account.l_name1)
-            print(account.cell_phone1)
-            print(account.email1)
-            print(account.f_name2)
-            print(account.l_name2)
-            print(account.cell_phone2)
-            print(account.email2)
-            print(account.account_bal)
-            print(account.account_credit)
-            print(account.home_phone)
-
+    students = Students.query.all()
+    for student in students:
+        print(student.id)
+        print(student.teacher_ID)
+        print(student.account_ID)
+        print(student.first_name)
+        print(student.last_name)
+        print(student.notes)
+   
     user = {'username': 'Miguel'}
     posts = [
         {
@@ -59,7 +33,7 @@ def index():
             'body': 'The Avengers movie was so cool!'
         }
     ]
-    return render_template('index.html', title='Home', user=user, posts=posts, teacher=teacher, accounts=accounts)
+    return render_template('index.html', title='Home', user=user, posts=posts)
 
 
 @bp.route('/sign_up', methods=['GET', 'POST'])
@@ -74,15 +48,15 @@ def sign_up():
         # if check_email1 or check_email2 is None:
             # no account exists, kind of... add account
             account = Accounts(
-                f_name1 = form.f_name1.data,
-                l_name1 = form.l_name1.data,
-                cell_phone1 = form.cell_phone1.data,
-                email1 = form.email1.data,
-                f_name2 = form.f_name2.data,
-                l_name2 = form.l_name2.data,
-                cell_phone2 = form.cell_phone2.data,
-                email2 = form.email2.data,
-                home_phone = form.home_phone.data
+                f_name1=form.f_name1.data,
+                l_name1=form.l_name1.data,
+                cell_phone1=form.cell_phone1.data,
+                email1=form.email1.data,
+                f_name2=form.f_name2.data,
+                l_name2=form.l_name2.data,
+                cell_phone2=form.cell_phone2.data,
+                email2=form.email2.data,
+                home_phone=form.home_phone.data
             )
             db.session.add(account)
             db.session.commit()
@@ -105,12 +79,18 @@ def sign_up():
 @login_required
 def add_student():
     form = AddStudentForm()
-    teachers = Teachers.query.all()
-    if teachers is not None:
-        Students.get_teachers_dropdown(teachers)
-    else:
-        flash('NO TEACHERS AROUND')
-
     # if for validates
-
-    return render_template('add_student.html', title='Sign Up', form=form, teachers=teachers, account=account)
+    if form.validate_on_submit():
+        teacher = form.teacher_ID.data
+        student = Students(
+            teacher_ID=teacher.id,
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+            notes=form.notes.data
+        )
+        db.session.add(student)
+        db.session.commit()
+        flash('Student added!')
+        return redirect(url_for('main.index'))
+   
+    return render_template('add_student.html', title='Sign Up', form=form)
