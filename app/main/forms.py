@@ -5,23 +5,19 @@ from app.models import Students, Teachers, Instruments
 from wtforms_alchemy import QuerySelectField
 
 
-class AddAccountPrimaryForm(FlaskForm):
+class AddAccountForm(FlaskForm):
     f_name1 = StringField('First Name', validators=[DataRequired()])
     l_name1 = StringField('Last Name', validators=[DataRequired()])
     cell_phone1 = StringField('Cell')
     email1 = StringField('Email')
     home_phone1 = StringField('Home Phone')
-    submit = SubmitField('Next')
-# FIGURE OUT HOW TO MAKE AT LEAST 1 PHONE NUMBER REQUIRED #
-
-
-class AddAccountSecondaryForm(FlaskForm):
     f_name2 = StringField('First Name')
     l_name2 = StringField('Last Name')
     cell_phone2 = StringField('Cell')
     email2 = StringField('Email')
     home_phone2 = StringField('Home Phone')
     submit = SubmitField('submit')
+# FIGURE OUT HOW TO MAKE AT LEAST 1 PHONE NUMBER REQUIRED #
 
 
 class AddStudentForm(FlaskForm):

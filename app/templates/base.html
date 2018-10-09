@@ -4,6 +4,12 @@
     {% if title %}{{ title }} - Guitar Studio {% else %}Welcome to the Studio{% endif %}
 {% endblock %}
 
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css"/>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+{% endblock styles %}
+
 {% block navbar %}
     <nav class="navbar navbar-default">
         <div class="container">
@@ -20,9 +26,9 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url_for('main.index') }}">Home</a></li>
                     <li><a href="{{ url_for('main.sign_up') }}">Sign Up!</a></li>
-                    <li><a href="{{ url_for('main.add_student') }}">add stu!</a></li>
+                    <li><a href="{{ url_for('main.add_student') }}">Add Student</a></li>
                     <!-- make admin only link -->
-                    <li><a href="{{ url_for('main.add_instrument') }}">add instrument</a></li>
+                    <li><a href="{{ url_for('main.add_instrument') }}">Add Instrument</a></li>
                 </ul>
                 
                 {% if g.search_form %}
@@ -66,5 +72,19 @@
     {{ super() }}
     {{ moment.include_moment() }}
     {{ moment.lang(g.locale) }}
-   
+
+<script>
+    var button = $('#button');
+    button.click(function(){
+        $(".anotherContact").toggleClass("hidden");
+         $(".add-contact-headline").toggleClass("hide");
+        if (button.hasClass("fa-plus-square")){
+            button.removeClass("fa-plus-square").addClass("fa-minus-square");
+        }else{
+            button.removeClass("fa-minus-square").addClass("fa-plus-square");
+        }
+    });
+
+</script>
+
 {% endblock %}

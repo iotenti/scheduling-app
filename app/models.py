@@ -90,7 +90,7 @@ class Accounts(db.Model):  # needs key constrains
     cell_phone1 = db.Column(db.String(10))
     email1 = db.Column(db.String(120))
     home_phone1 = db.Column(db.String(10), nullable=True)
-    f_name2 = db.Column(db.String(50), nullable=True) 
+    f_name2 = db.Column(db.String(50), nullable=True)
     l_name2 = db.Column(db.String(50), nullable=True)
     cell_phone2 = db.Column(db.String(10), nullable=True)
     email2 = db.Column(db.String(120), nullable=True)
@@ -98,6 +98,15 @@ class Accounts(db.Model):  # needs key constrains
     account_credit = db.Column(db.Float(10))
     home_phone2 = db.Column(db.String(10), nullable=True)
     # add bool archive col
+
+    def __repr__(self):
+        str = '{} {} - {}'.format(
+            self.f_name1,
+            self.l_name1,
+            self.cell_phone1,
+            )
+
+        return str
 
 
 class Attendence(db.Model):

@@ -1,0 +1,16 @@
+.float-right{
+    float: right;
+}
+.success{
+    color: #5cb85c;
+}
+.hidden{
+    display: none;
+}
+.add-contact-icon{
+    margin-top: 25px;
+    float: right;
+}
+.hide{
+    visibility: hidden;
+}
