@@ -80,7 +80,10 @@ class Students(db.Model):  # needs key constraints, I think
     # add bool archive col
 
     def __repr__(self):
-        return '{} {} - {}'.format(self.first_name, self.last_name, self.instrument)
+        return '{} {} - {}'.format(
+                                    self.first_name,
+                                    self.last_name,
+                                    self.instrument)
 
 
 class Accounts(db.Model):  # needs key constrains
@@ -100,11 +103,10 @@ class Accounts(db.Model):  # needs key constrains
     # add bool archive col
 
     def __repr__(self):
-        str = '{} {} - {}'.format(
-            self.f_name1,
+        str = '{}, {} - {}'.format(
             self.l_name1,
-            self.cell_phone1,
-            )
+            self.f_name1,
+            self.cell_phone1)
 
         return str
 
@@ -125,4 +127,5 @@ class Invoices(db.Model):
     payment_total = db.Column(db.Float(10))
     invoice_due_date = db.Column(db.DateTime(50))
     payment_date = db.Column(db.DateTime(50))
+
 

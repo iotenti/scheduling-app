@@ -17,7 +17,13 @@ def index():
     accounts = Accounts.query.all()
     user = current_user
 
-    return render_template('index.html', title='Home', user=user, students=students, accounts=accounts, instruments=instruments)
+    return render_template(
+                            'index.html',
+                            title='Home',
+                            user=user,
+                            students=students,
+                            accounts=accounts,
+                            instruments=instruments)
 
 
 @bp.route('/sign_up', methods=['GET', 'POST'])
@@ -28,6 +34,7 @@ def sign_up():
     if form.validate_on_submit():
         # provide logic as to not duplicate account
         # provide logid to hide half of form unless second contact needed
+        # add formatting so names are capitolized
         account = Accounts(
             f_name1=form.f_name1.data,
             l_name1=form.l_name1.data,
@@ -42,18 +49,15 @@ def sign_up():
         )
         db.session.add(account)
         db.session.commit()
-        flash('Account added!')
-        # return student sign up form LATER #
+        # session['id'] = account.id
+        # flash('Account added!')
+        # account_ID = account.id
 
-        # next_page = request.args.get('next')
-        # if not next_page or url_parse(next_page).netloc != '':
-        #     next_page = url_for('main.index')
-        # return redirect(next_page)
-
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.add_student'))
         # else:
         #     flash('This account already exists')
-        #     return redirect(url_for('main.index')) # or somewhere more relevent
+        #     return redirect(url_for('main.index')) # or somewhere
+        #     more relevent
     else:
         print("not valid")
     return render_template('add_account.html', title='Sign Up', form=form)
@@ -65,9 +69,14 @@ def add_student():
     form = AddStudentForm()
     # if for validates
     if form.validate_on_submit():
+
         teacher = form.teacher_ID.data
         instrument = form.instrument.data
+        account = form.account_ID.data
+        # add formatting so names are capitolized
         student = Students(
+
+            account_ID=account.id,
             teacher_ID=teacher.id,
             first_name=form.first_name.data,
             last_name=form.last_name.data,
@@ -95,4 +104,84 @@ def add_instrument():
         db.session.commit()
         flash('Instrument added!')
         return redirect(url_for('main.add_instrument'))
-    return render_template('add_instrument.html', title='Add An Instrument', form=form)
+    return render_template(
+                            'add_instrument.html',
+                            title='Add An Instrument',
+                            form=form)
+
+
+@bp.route('/view_all_accounts')
+@login_required
+def view_all_accounts():
+    accounts = Accounts.query.order_by(Accounts.l_name1).all()
+    abc = [
+        "A", "B", "C", "D", "E",
+        "F", "G", "H", "I", "J",
+        "K", "L", "M"
+    ]
+    xyz = [
+        "N", "O", "P", "Q", "R",
+        "S", "T", "U", "V", "W",
+        "X", "Y", "Z"
+    ]
+    return render_template(
+                            'view_all_accounts.html',
+                            title='Accounts',
+                            abc=abc,
+                            xyz=xyz,
+                            accounts=accounts)
+
+
+@bp.route('/view_account/<id>', methods=['GET', 'POST'])
+@login_required
+def view_account(id):
+    account = Accounts.query.get(id)
+    students = Students.query.filter_by(account_ID=id).all()
+
+    return render_template(
+                            'view_account.html',
+                            title='Account',
+                            students=students,
+                            account=account)
+
+
+@bp.route('/edit_account/<id>', methods=['GET', 'POST'])
+@login_required
+def edit_account(id):
+    account_in_db = Accounts.query.get(id)
+    form = AddAccountForm()
+    if form.validate_on_submit():
+
+        account_in_db.f_name1 = form.f_name1.data
+        account_in_db.l_name1 = form.l_name1.data
+        account_in_db.cell_phone1 = form.cell_phone1.data
+        account_in_db.email1 = form.email1.data
+        account_in_db.home_phone1 = form.home_phone1.data
+        account_in_db.f_name2 = form.f_name2.data
+        account_in_db.l_name2 = form.l_name2.data
+        account_in_db.cell_phone2 = form.cell_phone2.data
+        account_in_db.email2 = form.email2.data
+        account_in_db.home_phone2 = form.home_phone2.data
+        db.session.commit()
+
+        flash('Your changes have been saved.')
+        return redirect(url_for('main.view_account', id=id))
+
+    elif request.method == 'GET':
+
+        form.f_name1.data = account_in_db.f_name1
+        form.l_name1.data = account_in_db.l_name1
+        form.cell_phone1.data = account_in_db.cell_phone1
+        form.email1.data = account_in_db.email1
+        form.home_phone1.data = account_in_db.home_phone1
+        form.f_name2.data = account_in_db.f_name2
+        form.l_name2.data = account_in_db.l_name2
+        form.cell_phone2.data = account_in_db.cell_phone2
+        form.email2.data = account_in_db.email2
+        form.home_phone2.data = account_in_db.home_phone2
+    return render_template(
+                            'edit_account.html',
+                            title='Edit Account',
+                            form=form,
+                            account_in_db=account_in_db)
+

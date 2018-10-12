@@ -9,25 +9,64 @@
             {% endfor %}
         </div>
         <div><h1>STUDENTS</h1>
+        <table>
             {% for student in students %}
-                <p>{{ student }}</p>
+                <tr><td><h1>student id: {{ student.id }}</h1></td></tr>
+                <tr><td>account id: {{ student.account_ID }}</td></tr>
+                <tr><td>teacher id: {{ student.teacher_ID }}</td></tr>
+                <tr><td>attendence id: {{ student.attendence_ID }}</td></tr>
+                <tr><td>first name: {{ student.first_name }}</td></tr>
+                <tr><td>last name: {{ student.last_name }}</td></tr>
+                <tr><td>instrument: {{ student.instrument }}</td></tr>
+                <tr><td>notes: {{ student.notes }}</td></tr>
             {% endfor %}
+        </table>
         </div>
-        <div><h1>accounts</h1>
+        <div>
+            <h1>accounts</h1>
+            <table>
             {% for account in accounts %}
-                <h3>Primary contact</h3>
-                <p>first name: {{ account.f_name1 }}</p>
-                <p>last name: {{ account.l_name1 }}</p>
-                <p>cell phone: {{ account.cell_phone1 }}</p>
-                <p>email: {{ account.email1 }}</p>
-                <p>home phone: {{ account.home_phone1 }}</p>
-                <h3>Secondary contact</h3>
-                <p>first name: {{ account.f_name2 }}</p>
-                <p>last name: {{ account.l_name2 }}</p>
-                <p>cell phone: {{ account.cell_phone2 }}</p>
-                <p>email: {{ account.email2 }}</p>
-                <p>home phone: {{ account.home_phone2 }}</p>
+                <tr>
+                    <td><h3>Primary contact</h3></td>
+                </tr>
+                <tr>
+                    <td>account id: {{ account.id }}</td>
+                </tr>
+                <tr>
+                    <td>first name: {{ account.f_name1 }}</td>
+                </tr>
+                <tr>
+                    <td>last name: {{ account.l_name1 }}</td>
+                </tr>
+                <tr>
+                    <td>cell phone: {{ account.cell_phone1 }}</td>
+                </tr>
+                <tr>
+                    <td>email: {{ account.email1 }}</td>
+                </tr>
+                <tr>
+                    <td>home phone: {{ account.home_phone1 }}</td>
+                </tr>
+                <tr>
+                    <td><h3>Secondary contact</h3></td>
+                </tr>
+                <tr>
+                    <td>first name: {{ account.f_name2 }}</td>
+                </tr>
+                <tr>
+                    <td>last name: {{ account.l_name2 }}</td>
+                </tr>
+                <tr>
+                    <td>cell phone: {{ account.cell_phone2 }}</td>
+                </tr>
+                <tr>
+                    <td>email: {{ account.email2 }}</td>
+                </tr>
+                <tr>
+                    <td>home phone: {{ account.home_phone2 }}</td></tr>
+                </tr>
             {% endfor %}
+            </table>
         </div>
     </div>
 {% endblock %}

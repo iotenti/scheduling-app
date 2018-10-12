@@ -11,6 +11,9 @@
     margin-top: 25px;
     float: right;
 }
+.add-student-icon{
+    padding-right:10px;
+}
 .hide{
     visibility: hidden;
 }
