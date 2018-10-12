@@ -137,6 +137,7 @@ def view_all_accounts():
 def view_account(id):
     account = Accounts.query.get(id)
     students = Students.query.filter_by(account_ID=id).all()
+    # probably do a join here
 
     return render_template(
                             'view_account.html',
@@ -185,3 +186,12 @@ def edit_account(id):
                             form=form,
                             account_in_db=account_in_db)
 
+
+@bp.route('/delete_account/<id>', methods=['GET', 'POST'])
+@login_required
+def delete_account(id):
+    account = Accounts.query.get(id)
+    return render_template(
+                            'delete_account.html',
+                            account=account,
+                            title='Delete')

@@ -34,7 +34,7 @@
                 {% for student in students%}
                     <p>{{ student }}</p>
                 {% endfor %}
-                <a href="#">Add A Student?</a>
+                <a href="#"><i class="far success fa-plus-square fa-lg add-student-icon"></i>Add A Student?</a>
             </td>
             {% else %}
             <td>
@@ -49,16 +49,63 @@
                 <div style="text-align:left;">
                     <a href="{{ url_for('main.edit_account', id=account.id) }}">Edit</a> 
                     &nbsp; | &nbsp;
-                    <a href="#">Delete</a>
+                    <a href="#" data-toggle="modal" data-target="#editModal">Delete</a>
                 </div>
             </td>
-            <td>
-            </td>
-            <td>
-                
-            </td>
+            <td></td>
+            <td></td>
         </tr>
     </table>
+</div>
+<div class="modal fade" id="editModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Are you sure?</h4>
+            </div>
+            <div class="modal-body modal-xl">
+                <table>
+                    <tr>
+                        <td>
+                            <h3>Primary Contact:</h3>
+                            <p><b>First name:</b> {{ account.f_name1 }}</p>
+                            <p><b>Last name:</b> {{ account.l_name1 }}</p>
+                            <p><b>Cell phone:</b> {{ account.cell_phone1 }}</p>
+                            <p><b>Email:</b> {{ account.email1 }}</p>
+                            <p><b>Home phone:</b> {{ account.home_phone1 }}</p>
+                        </td>
+                        {% if account.f_name2 and account.l_name2 is not none %}
+                        <td>
+                            <h3>Secondary Contact:</h3>
+                            <p><b>First name:</b> {{ account.f_name2 }}</p>
+                            <p><b>Last name:</b> {{ account.l_name2 }}</p>
+                            <p><b>Cell phone:</b> {{ account.cell_phone2 }}</p>
+                            <p><b>Email:</b> {{ account.email2 }}</p>
+                            <p><b>Home phone:</b> {{ account.home_phone2 }}</p>
+                        </td>
+                        {% endif %}
+                        {% if students %}
+                        <td>
+                            <h3>Students:</h3>
+                            {% for student in students%}
+                                <p>{{ student }}</p>
+                            {% endfor %}
+                        </td>
+                        {% else %}
+                        <td>
+                            <h3>Students:</h3>
+                            <p>No current students on this account.</p>
+                        </td>
+                        {% endif %}
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
+                <a href="{{ url_for('main.delete_account', id=account.id) }}" class="btn btn-danger" value="delete">Delete</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
