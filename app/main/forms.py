@@ -55,5 +55,5 @@ class AddStudentForm(FlaskForm):
 
 
 class AddInstrumentForm(FlaskForm):
-    instrument = StringField('Instrument', validators=[DataRequired()])
+    instrument = StringField('Instrument:', validators=[DataRequired()])
     submit = SubmitField('Submit')

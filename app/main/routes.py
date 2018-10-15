@@ -65,6 +65,7 @@ def sign_up():
 # pass account id in link - use to add student
 def add_student(id):
     form = AddStudentForm()
+    account = Accounts.query.get(id)
     # if for validates
     if form.validate_on_submit():
 
@@ -85,7 +86,11 @@ def add_student(id):
         flash('Student added!')
         return redirect(url_for('main.index'))
 
-    return render_template('add_student.html', title='Sign Up', form=form)
+    return render_template(
+                            'add_student.html',
+                            title='Add Student',
+                            account=account,
+                            form=form)
 
 
 @bp.route('/add_instrument', methods=['GET', 'POST'])

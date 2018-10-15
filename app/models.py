@@ -103,10 +103,9 @@ class Accounts(db.Model):  # needs key constrains
     # add bool archive col
 
     def __repr__(self):
-        str = '{}, {} - {}'.format(
-            self.l_name1,
+        str = '{} {}'.format(
             self.f_name1,
-            self.cell_phone1)
+            self.l_name1)
 
         return str
 
