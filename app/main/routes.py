@@ -49,11 +49,8 @@ def sign_up():
         )
         db.session.add(account)
         db.session.commit()
-        # session['id'] = account.id
-        # flash('Account added!')
-        # account_ID = account.id
-
-        return redirect(url_for('main.add_student'))
+        flash('Account added!')
+        return redirect(url_for('main.add_student', id=account.id))
         # else:
         #     flash('This account already exists')
         #     return redirect(url_for('main.index')) # or somewhere
@@ -63,20 +60,20 @@ def sign_up():
     return render_template('add_account.html', title='Sign Up', form=form)
 
 
-@bp.route('/add_student', methods=['GET', 'POST'])
+@bp.route('/add_student/<id>', methods=['GET', 'POST'])
 @login_required
-def add_student():
+# pass account id in link - use to add student
+def add_student(id):
     form = AddStudentForm()
     # if for validates
     if form.validate_on_submit():
 
         teacher = form.teacher_ID.data
         instrument = form.instrument.data
-        account = form.account_ID.data
         # add formatting so names are capitolized
         student = Students(
 
-            account_ID=account.id,
+            account_ID=id,
             teacher_ID=teacher.id,
             first_name=form.first_name.data,
             last_name=form.last_name.data,
@@ -114,21 +111,15 @@ def add_instrument():
 @login_required
 def view_all_accounts():
     accounts = Accounts.query.order_by(Accounts.l_name1).all()
-    abc = [
-        "A", "B", "C", "D", "E",
-        "F", "G", "H", "I", "J",
-        "K", "L", "M"
-    ]
-    xyz = [
-        "N", "O", "P", "Q", "R",
-        "S", "T", "U", "V", "W",
-        "X", "Y", "Z"
-    ]
+
+    abc = [account.l_name1[:1].upper() for account in accounts]
+    abc = set(abc)
+    abc = sorted(abc)
+
     return render_template(
                             'view_all_accounts.html',
                             title='Accounts',
                             abc=abc,
-                            xyz=xyz,
                             accounts=accounts)
 
 

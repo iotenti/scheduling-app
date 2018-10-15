@@ -18,21 +18,6 @@
                 {% endfor %}
             {% endfor %}
         </div>
-        <div class="col-md-6">  
-            {% for letter in xyz %}
-            <h1>{{ letter }}</h1>
-                {% for account in accounts  %}
-                    {% if account.l_name1[:1].upper() == letter %}
-                    <ul>
-                        <li><a href="{{ url_for('main.view_account', id=account.id) }}">
-                                {{ account.l_name1 }}, {{account.f_name1 }}
-                            </a>
-                        </li>
-                    </ul>
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
-        </div>
     </div>
 </div>
 

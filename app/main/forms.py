@@ -26,22 +26,34 @@ class AddStudentForm(FlaskForm):
     def get_teachers():
         return Teachers.query
 
-    def get_accounts():
-        return Accounts.query.order_by(desc(Accounts.id))
-
     def get_instruments():
         return Instruments.query
 
-    account_ID = QuerySelectField('Select Account...', query_factory=get_accounts, allow_blank=False, validators=[DataRequired()])
-    teacher_ID = QuerySelectField('Select Teacher...', query_factory=get_teachers, allow_blank=True, validators=[DataRequired()])
-    first_name = StringField('First Name', render_kw={"placeholder": "First Name"}, validators=[DataRequired()])
-    last_name = StringField('Last Name', render_kw={"placeholder": "Last Name"}, validators=[DataRequired()])
-    instrument = QuerySelectField('Select Instrument...', query_factory=get_instruments, allow_blank=True, validators=[DataRequired()])
-    notes = TextAreaField('Notes', render_kw={'placeholder': 'Notes'}, validators=[DataRequired()])
+    teacher_ID = QuerySelectField(
+                                'Select Teacher...',
+                                query_factory=get_teachers,
+                                allow_blank=True,
+                                validators=[DataRequired()])
+    first_name = StringField(
+                            'First Name',
+                            render_kw={"placeholder": "First Name"},
+                            validators=[DataRequired()])
+    last_name = StringField(
+                            'Last Name',
+                            render_kw={"placeholder": "Last Name"},
+                            validators=[DataRequired()])
+    instrument = QuerySelectField(
+                                'Select Instrument...',
+                                query_factory=get_instruments,
+                                allow_blank=True,
+                                validators=[DataRequired()])
+    notes = TextAreaField(
+                        'Notes',
+                        render_kw={'placeholder': 'Notes'},
+                        validators=[DataRequired()])
     submit = SubmitField('Add Student')
 
 
 class AddInstrumentForm(FlaskForm):
     instrument = StringField('Instrument', validators=[DataRequired()])
     submit = SubmitField('Submit')
-
