@@ -142,6 +142,16 @@ def view_account(id):
                             account=account)
 
 
+@bp.route('/view_student/<id>', methods=['GET', 'POST'])
+@login_required
+def view_student(id):
+    student = Students.query.get(id)
+    return render_template(
+                            'view_student.html',
+                            title='Student',
+                            student=student)
+
+
 @bp.route('/edit_account/<id>', methods=['GET', 'POST'])
 @login_required
 def edit_account(id):

@@ -32,7 +32,7 @@
             <td>
                 <h3>Students:</h3>
                 {% for student in students%}
-                    <p>{{ student }}</p>
+                    <p><a href="{{ url_for('main.view_student', id=student.id) }}">{{ student }}</a></p>
                 {% endfor %}
                 <a href="{{ url_for('main.add_student', id=account.id) }}"><i class="far success fa-plus-square fa-lg add-student-icon"></i>Add A Student?</a>
             </td>
