@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block app_content %}
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -8,7 +8,7 @@
         </div>
     </div>
     <br>
-    <table class="table table-hover">
+    <table class="table table-hover admin-table">
         <tr>
             <td>
                 <h3>Primary Contact:</h3>
@@ -34,26 +34,30 @@
                 {% for student in students%}
                     <p><a href="{{ url_for('main.view_student', id=student.id) }}">{{ student }}</a></p>
                 {% endfor %}
-                <a href="{{ url_for('main.add_student', id=account.id) }}"><i class="far success fa-plus-square fa-lg add-student-icon"></i>Add A Student?</a>
+                <br>
+                    <a href="{{ url_for('main.add_student', id=account.id) }}">
+                        <i class="far success fa-plus-square fa-lg add-student-icon"></i>Add A Student?</a>
             </td>
             {% else %}
             <td>
                 <h3>Students:</h3>
                 <p>No current students on this account.</p>
-                <a href="{{ url_for('main.add_student', id=account.id) }}"><i class="far success fa-plus-square fa-lg add-student-icon"></i>Add A Student?</a>
+                <br>
+                <a href="{{ url_for('main.add_student', id=account.id) }}">
+                    <i class="far success fa-plus-square fa-lg add-student-icon"></i>Add A Student?</a>
             </td>
             {% endif %}
         </tr>
         <tr>
-            <td>
-                <div style="text-align:left;">
+            <td colspan="100">
+                <div class="admin-controls">
                     <a href="{{ url_for('main.edit_account', id=account.id) }}">Edit</a> 
                     &nbsp; | &nbsp;
                     <a href="#" data-toggle="modal" data-target="#editModal">Delete</a>
                 </div>
             </td>
-            <td></td>
-            <td></td>
+            
+            
         </tr>
     </table>
     </div>

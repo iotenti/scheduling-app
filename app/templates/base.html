@@ -51,36 +51,32 @@
             </div>
         </div>
         {% if g.abc %}
-                <div id="viewAccounts" class="accounts-container hidden" style="position:absolute;">
-                    <div style="text-align:center; position:relative;">
-                        <h1>Accounts</h1>
-                    </div>
-                    <dl>
-                        {% for letter in g.abc %}
-                            <div>
-                                <dt>{{ letter }}</dt>
-                                <div class="dd-container">
-                                    <table class="table table-hover">
-                                        {% for account in g.accounts %}
-                                            {% if account.l_name1[:1].upper() == letter %} 
-                                                <tr>
-                                                    <td>
-                                                        <dd>
-                                                            <a href="{{ url_for('main.view_account', id=account.id) }}">
-                                                                {{ account.l_name1 }}, {{ account.f_name1 }} 
-                                                            </a>
-                                                        </dd>
-                                                    </td>
-                                                </tr>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </table>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </dl>
+            <div id="viewAccounts" class="accounts-container hidden" style="position:absolute;">
+                <div style="text-align:center; position:relative;">
+                    <h1>Accounts</h1>
                 </div>
-            {% endif %}
+                <dl>
+                    {% for letter in g.abc %}
+                        <div>
+                            <dt>{{ letter }}</dt>
+                            <div class="dd-container">
+                                <table class="table table-hover">
+                                    {% for account in g.accounts %}
+                                        {% if account.l_name1[:1].upper() == letter %} 
+                                            <tr><td><dd>
+                                                <a href="{{ url_for('main.view_account', id=account.id) }}">
+                                                    {{ account.l_name1 }}, {{ account.f_name1 }} 
+                                                </a>
+                                            </dd></td></tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </dl>
+            </div>
+        {% endif %}
     </nav>
 {% endblock %}
 

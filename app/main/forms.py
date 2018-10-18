@@ -29,11 +29,6 @@ class AddStudentForm(FlaskForm):
     def get_instruments():
         return Instruments.query
 
-    teacher_ID = QuerySelectField(
-                                'Select Teacher...',
-                                query_factory=get_teachers,
-                                allow_blank=True,
-                                validators=[DataRequired()])
     first_name = StringField(
                             'First Name',
                             render_kw={"placeholder": "First Name"},
@@ -45,7 +40,12 @@ class AddStudentForm(FlaskForm):
     instrument = QuerySelectField(
                                 'Select Instrument...',
                                 query_factory=get_instruments,
-                                allow_blank=True,
+                                allow_blank=False,
+                                validators=[DataRequired()])
+    teacher_ID = QuerySelectField(
+                                'Select Teacher...',
+                                query_factory=get_teachers,
+                                allow_blank=False,
                                 validators=[DataRequired()])
     notes = TextAreaField(
                         'Notes',
