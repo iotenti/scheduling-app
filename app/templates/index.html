@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-    <h1>Hi, {{ user.first_name }}!</h1>
+<div class="container">
+<h1>Hi, {{ user.first_name }}!</h1>
     <div><h1>instrument</h1>
         {% for instrument in instruments %}
             <p>{{ instrument }}</p>
@@ -68,5 +68,5 @@
         {% endfor %}
         </table>
     </div>
-
+</div>
 {% endblock %}

@@ -33,9 +33,9 @@ h1{
 .accounts-container{
     border: 1px solid rgba(94, 102, 173, 0.096);
     background-color: white;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 24px 30px 9px 0 rgba(0, 0, 0, 0.2), 0px 0px 0px 0 rgba(0, 0, 0, 0.19);
     overflow-y: auto;
-    height: 500px;
+    height: 700px;
     width: 400px;
     margin-left: 438px;
     white-space: nowrap;
@@ -60,8 +60,6 @@ dt {
 }
 dd {
     font-size: 16px;
-    
-    
 }
 
 .dd-container{

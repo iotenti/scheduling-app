@@ -25,7 +25,8 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url_for('main.sign_up') }}">Sign Up!</a></li>
-                    <li><a id="accounts" href="#">Accounts</a></li>
+                    <!-- not sure if this javascript:; thing is stupid? research -->
+                    <li><a id="accounts" href="javascript: void(0);">Accounts</a></li>
                     <!-- make admin only link -->
                     <li><a href="{{ url_for('main.add_instrument') }}">Add Instrument</a></li>
                 </ul>
@@ -106,6 +107,7 @@
 <script>
     var button = $('#button');
     var accounts = $('#accounts')
+    var accountsContainer = $("#viewAccounts")
     button.click(function(){
         $(".anotherContact").toggleClass("hidden");
          $(".add-contact-headline").toggleClass("hide");
@@ -116,9 +118,16 @@
         }
     });
 
-    accounts.click(function(){
-        $("#viewAccounts").toggleClass("hidden");
+    function hide(e){
+        if(!accounts.is(e.target) && !accountsContainer.hasClass("hidden")){
+            accountsContainer.toggleClass("hidden");
+        }
+    }
+    accounts.click(function(e){
+        accountsContainer.toggleClass("hidden");
     });
+
+   document.addEventListener('mouseup', hide, false);
 
 </script>
 
