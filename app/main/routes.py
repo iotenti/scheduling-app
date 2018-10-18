@@ -7,6 +7,13 @@ from app.main import bp
 from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm
 
 
+@bp.before_app_request
+def before_request():
+    if current_user.is_authenticated:
+        g.accounts = Accounts.view_all_accounts()
+        g.abc = Accounts.get_alphabet(g.accounts)
+
+
 @bp.route('/')
 @bp.route('/index')
 @login_required
@@ -84,7 +91,11 @@ def add_student(id):
         db.session.add(student)
         db.session.commit()
         flash('Student added!')
-        return redirect(url_for('main.index'))
+
+        return redirect(url_for('main.add_student', id=id))
+
+    else:
+            print("not valid")
 
     return render_template(
                             'add_student.html',
@@ -105,27 +116,12 @@ def add_instrument():
         db.session.add(instrument)
         db.session.commit()
         flash('Instrument added!')
+
         return redirect(url_for('main.add_instrument'))
     return render_template(
                             'add_instrument.html',
                             title='Add An Instrument',
                             form=form)
-
-
-@bp.route('/view_all_accounts')
-@login_required
-def view_all_accounts():
-    accounts = Accounts.query.order_by(Accounts.l_name1).all()
-
-    abc = [account.l_name1[:1].upper() for account in accounts]
-    abc = set(abc)
-    abc = sorted(abc)
-
-    return render_template(
-                            'view_all_accounts.html',
-                            title='Accounts',
-                            abc=abc,
-                            accounts=accounts)
 
 
 @bp.route('/view_account/<id>', methods=['GET', 'POST'])

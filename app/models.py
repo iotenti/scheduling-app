@@ -109,6 +109,19 @@ class Accounts(db.Model):  # needs key constrains
 
         return str
 
+    @classmethod
+    def view_all_accounts(cls):
+        accounts = Accounts.query.order_by(Accounts.l_name1).all()
+        return accounts
+
+    @classmethod
+    def get_alphabet(cls, accounts):
+        abc = [account.l_name1[:1].upper() for account in accounts]
+        abc = set(abc)
+        abc = sorted(abc)
+
+        return abc
+
 
 class Attendence(db.Model):
     id = db.Column(db.Integer, primary_key=True)

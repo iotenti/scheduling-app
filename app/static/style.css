@@ -17,10 +17,6 @@
 .hide{
     visibility: hidden;
 }
-.shadow{
-    border: 1px solid rgba(94, 102, 173, 0.096);
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
 th{
     color: rgb(124, 189, 255);
     font-size: 2em;
@@ -33,4 +29,45 @@ h3{
 }
 h1{
     color: rgb(101, 114, 128);
+}
+.accounts-container{
+    border: 1px solid rgba(94, 102, 173, 0.096);
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    overflow-y: auto;
+    height: 500px;
+    width: 400px;
+    margin-left: 438px;
+    white-space: nowrap;
+    z-index: 9999;
+}
+dl > div {
+    background: #FFF;
+    padding: 24px 0 0 0;
+    white-space: nowrap;
+}
+
+dt {
+    width: 100px;
+    float: left;
+    color: rgb(124, 189, 255);   
+    font-size: 2em;
+    text-align: center;
+    position: -webkit-sticky;
+    position: sticky;
+    top: -1px;
+
+}
+dd {
+    font-size: 16px;
+    
+    
+}
+
+.dd-container{
+    min-height: 50px;
+    width: 250px;
+    margin-left: 110px;
+    padding-left: 10px;
+    white-space: nowrap;
 }
