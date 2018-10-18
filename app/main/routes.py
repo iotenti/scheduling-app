@@ -130,13 +130,12 @@ def add_instrument():
 @login_required
 def view_account(id):
     account = Accounts.query.get(id)
-    students = Students.query.filter_by(account_ID=id).all()
+    # students = Students.query.filter_by(account_ID=id).all()
     # probably do a join here
 
     return render_template(
                             'view_account.html',
                             title='Account',
-                            students=students,
                             account=account)
 
 

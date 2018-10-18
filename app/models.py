@@ -7,6 +7,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from app import db, login
 
+# IMPORTANT LATER
+
+# timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+# The timestamp field is going to be indexed, which is useful if you want
+# to retrieve posts in chronological order. I have also added a default
+# argument, and passed the datetime.utcnow function. When you pass a
+# function as a default, SQLAlchemy will set the field to the value of
+# calling that function (note that I did not include the () after utcnow,
+# so I'm passing the function itself, and not the result of calling it).
+
 
 class Teachers(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -21,6 +31,7 @@ class Teachers(UserMixin, db.Model):
     state = db.Column(db.String(2))
     zipcode = db.Column(db.String(5))
     notes = db.Column(db.String(500))
+    students = db.relationship('Students', backref='teacher', lazy='dynamic')
     # add admin field
     # format first and last name to capitalize
 
@@ -59,6 +70,44 @@ def load_user(id):
     return Teachers.query.get(int(id))
 
 
+class Accounts(db.Model):  # needs key constrains
+    id = db.Column(db.Integer, primary_key=True)
+    f_name1 = db.Column(db.String(50))
+    l_name1 = db.Column(db.String(50))
+    cell_phone1 = db.Column(db.String(10))
+    email1 = db.Column(db.String(120))
+    home_phone1 = db.Column(db.String(10), nullable=True)
+    f_name2 = db.Column(db.String(50), nullable=True)
+    l_name2 = db.Column(db.String(50), nullable=True)
+    cell_phone2 = db.Column(db.String(10), nullable=True)
+    email2 = db.Column(db.String(120), nullable=True)
+    account_bal = db.Column(db.Float(10))
+    account_credit = db.Column(db.Float(10))
+    home_phone2 = db.Column(db.String(10), nullable=True)
+    students = db.relationship('Students', backref='account', lazy='dynamic')
+    # add bool archive col
+
+    def __repr__(self):
+        str = '{} {}'.format(
+            self.f_name1,
+            self.l_name1)
+
+        return str
+
+    @classmethod
+    def view_all_accounts(cls):
+        accounts = Accounts.query.order_by(Accounts.l_name1).all()
+        return accounts
+
+    @classmethod
+    def get_account_alphabet(cls, accounts):
+        abc = [account.l_name1[:1].upper() for account in accounts]
+        abc = set(abc)
+        abc = sorted(abc)
+
+        return abc
+
+
 class Instruments(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     instrument = db.Column(db.String(50))
@@ -92,48 +141,13 @@ class Students(db.Model):  # needs key constraints, I think
 
         return abc
 
+
+
     def __repr__(self):
         return '{} {} - {}'.format(
                                     self.first_name,
                                     self.last_name,
                                     self.instrument)
-
-
-class Accounts(db.Model):  # needs key constrains
-    id = db.Column(db.Integer, primary_key=True)
-    f_name1 = db.Column(db.String(50))
-    l_name1 = db.Column(db.String(50))
-    cell_phone1 = db.Column(db.String(10))
-    email1 = db.Column(db.String(120))
-    home_phone1 = db.Column(db.String(10), nullable=True)
-    f_name2 = db.Column(db.String(50), nullable=True)
-    l_name2 = db.Column(db.String(50), nullable=True)
-    cell_phone2 = db.Column(db.String(10), nullable=True)
-    email2 = db.Column(db.String(120), nullable=True)
-    account_bal = db.Column(db.Float(10))
-    account_credit = db.Column(db.Float(10))
-    home_phone2 = db.Column(db.String(10), nullable=True)
-    # add bool archive col
-
-    def __repr__(self):
-        str = '{} {}'.format(
-            self.f_name1,
-            self.l_name1)
-
-        return str
-
-    @classmethod
-    def view_all_accounts(cls):
-        accounts = Accounts.query.order_by(Accounts.l_name1).all()
-        return accounts
-
-    @classmethod
-    def get_account_alphabet(cls, accounts):
-        abc = [account.l_name1[:1].upper() for account in accounts]
-        abc = set(abc)
-        abc = sorted(abc)
-
-        return abc
 
 
 class Attendence(db.Model):

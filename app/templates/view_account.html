@@ -28,10 +28,10 @@
                 <p><b>Home phone:</b> {{ account.home_phone2 }}</p>
             </td>
             {% endif %}
-            {% if students %}
+            {% if account.students %}
             <td>
                 <h3>Students:</h3>
-                {% for student in students%}
+                {% for student in account.students %}
                     <p><a href="{{ url_for('main.view_student', id=student.id) }}">{{ student }}</a></p>
                 {% endfor %}
                 <br>
@@ -47,6 +47,7 @@
                     <i class="far success fa-plus-square fa-lg add-student-icon"></i>Add A Student?</a>
             </td>
             {% endif %}
+            
         </tr>
         <tr>
             <td colspan="100">
