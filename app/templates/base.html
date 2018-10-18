@@ -26,7 +26,8 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url_for('main.sign_up') }}">Sign Up!</a></li>
                     <!-- not sure if this javascript:; thing is stupid? research -->
-                    <li><a id="accounts" href="javascript: void(0);">Accounts</a></li>
+                    <li><a id="accountsLink" href="javascript: void(0);">Accounts</a></li>
+                    <li><a id="studentsLink" href="javascript: void(0);">Students</a></li>
                     <!-- make admin only link -->
                     <li><a href="{{ url_for('main.add_instrument') }}">Add Instrument</a></li>
                 </ul>
@@ -50,33 +51,56 @@
                 </ul>
             </div>
         </div>
-        {% if g.abc %}
-            <div id="viewAccounts" class="accounts-container hidden" style="position:absolute;">
-                <div style="text-align:center; position:relative;">
-                    <h1>Accounts</h1>
-                </div>
-                <dl>
-                    {% for letter in g.abc %}
-                        <div>
-                            <dt>{{ letter }}</dt>
-                            <div class="dd-container">
-                                <table class="table table-hover">
-                                    {% for account in g.accounts %}
-                                        {% if account.l_name1[:1].upper() == letter %} 
-                                            <tr><td><dd>
-                                                <a href="{{ url_for('main.view_account', id=account.id) }}">
-                                                    {{ account.l_name1 }}, {{ account.f_name1 }} 
-                                                </a>
-                                            </dd></td></tr>
-                                        {% endif %}
-                                    {% endfor %}
-                                </table>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </dl>
+        <div id="viewAccounts" class="accounts-container hidden" style="position:absolute;">
+            <div style="text-align:center; position:relative;">
+                <h1>Accounts</h1>
             </div>
-        {% endif %}
+            <dl>
+                {% for letter in g.account_abc %}
+                    <div>
+                        <dt>{{ letter }}</dt>
+                        <div class="dd-container">
+                            <table class="table table-hover">
+                                {% for account in g.accounts %}
+                                    {% if account.l_name1[:1].upper() == letter %} 
+                                        <tr><td><dd>
+                                            <a href="{{ url_for('main.view_account', id=account.id) }}">
+                                                {{ account.l_name1 }}, {{ account.f_name1 }} 
+                                            </a>
+                                        </dd></td></tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                {% endfor %}
+            </dl>
+        </div>
+        <div id="viewStudents" class="accounts-container hidden" style="position:absolute;">
+            <div style="text-align:center; position:relative;">
+                <h1>Students</h1>
+            </div>
+            <dl>
+                {% for letter in g.student_abc %}
+                    <div>
+                        <dt>{{ letter }}</dt>
+                        <div class="dd-container">
+                            <table class="table table-hover">
+                                {% for student in g.students %}
+                                    {% if student.first_name[:1].upper() == letter %} 
+                                        <tr><td><dd>
+                                            <a href="{{ url_for('main.view_student', id=student.id) }}">
+                                                {{ student.first_name }} {{ student.last_name }} 
+                                            </a>
+                                        </dd></td></tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                {% endfor %}
+            </dl>
+        </div>
     </nav>
 {% endblock %}
 
@@ -102,8 +126,11 @@
 
 <script>
     var button = $('#button');
-    var accounts = $('#accounts')
+    var accountsLink = $('#accountsLink')
+    var studentsLink = $('#studentsLink')
     var accountsContainer = $("#viewAccounts")
+    var studentsContainer = $("#viewStudents")
+
     button.click(function(){
         $(".anotherContact").toggleClass("hidden");
          $(".add-contact-headline").toggleClass("hide");
@@ -115,12 +142,17 @@
     });
 
     function hide(e){
-        if(!accounts.is(e.target) && !accountsContainer.hasClass("hidden")){
+        if(!accountsLink.is(e.target) && !accountsContainer.hasClass("hidden")){
             accountsContainer.toggleClass("hidden");
+        }else if(!studentsLink.is(e.target) && !studentsContainer.hasClass("hidden")){
+            studentsContainer.toggleClass("hidden");
         }
     }
-    accounts.click(function(e){
+    accountsLink.click(function(e){
         accountsContainer.toggleClass("hidden");
+    });
+    studentsLink.click(function(e){
+        studentsContainer.toggleClass("hidden");
     });
 
    document.addEventListener('mouseup', hide, false);

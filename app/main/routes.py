@@ -11,7 +11,9 @@ from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm
 def before_request():
     if current_user.is_authenticated:
         g.accounts = Accounts.view_all_accounts()
-        g.abc = Accounts.get_alphabet(g.accounts)
+        g.account_abc = Accounts.get_account_alphabet(g.accounts)
+        g.students = Students.view_all_students()
+        g.student_abc = Students.get_student_alphabet(g.students)
 
 
 @bp.route('/')
@@ -192,7 +194,14 @@ def edit_account(id):
 @bp.route('/delete_account/<id>', methods=['GET', 'POST'])
 @login_required
 def delete_account(id):
+    # make casscade delete
     account = Accounts.query.get(id)
+    db.session.delete(account)
+    db.session.commit()
+
+    flash('Account Deleted')
+    return redirect(url_for('main.index'))
+
     return render_template(
                             'delete_account.html',
                             account=account,

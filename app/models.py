@@ -79,6 +79,19 @@ class Students(db.Model):  # needs key constraints, I think
     notes = db.Column(db.String(500))
     # add bool archive col
 
+    @classmethod
+    def view_all_students(cls):
+        students = Students.query.order_by(Students.first_name).all()
+        return students
+
+    @classmethod
+    def get_student_alphabet(cls, students):
+        abc = [student.first_name[:1].upper() for student in students]
+        abc = set(abc)
+        abc = sorted(abc)
+
+        return abc
+
     def __repr__(self):
         return '{} {} - {}'.format(
                                     self.first_name,
@@ -115,7 +128,7 @@ class Accounts(db.Model):  # needs key constrains
         return accounts
 
     @classmethod
-    def get_alphabet(cls, accounts):
+    def get_account_alphabet(cls, accounts):
         abc = [account.l_name1[:1].upper() for account in accounts]
         abc = set(abc)
         abc = sorted(abc)
