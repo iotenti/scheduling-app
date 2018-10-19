@@ -14,7 +14,8 @@
                 <h3>{{ student.first_name }} {{ student.last_name }}</h3>
                 <p><b>Teacher:</b> {{ student.teacher }}</p>
                 <p><b>Instrument:</b> {{ student.instrument }}</p>
-                <p><b>Account: 
+                <p><b>Account:</b><a href="{{ url_for('main.view_account', id=student.account_ID) }}">
+                                  {{ student.account }}</a></p>
                 <h3>Notes:</h3>
                 <p>{{ student.notes }}</p>
             </td>

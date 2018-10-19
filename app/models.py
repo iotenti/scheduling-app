@@ -1,6 +1,7 @@
 
 from hashlib import md5
 from time import time
+from datetime import datetime
 from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -60,7 +61,7 @@ class Teachers(UserMixin, db.Model):
         try:
             id = jwt.decode(token, current_app.config['SECRET_KEY'],
                             algorithms=['HS256'])['reset_password']
-        except:
+        except:  # noqa: E722
             return
         return Teachers.query.get(id)
 
@@ -85,6 +86,12 @@ class Accounts(db.Model):  # needs key constrains
     account_credit = db.Column(db.Float(10))
     home_phone2 = db.Column(db.String(10), nullable=True)
     students = db.relationship('Students', backref='account', lazy='dynamic')
+    invoices = db.relationship('Invoices', backref='account', lazy='dynamic')
+    # investigate back_populate
+    attendence = db.relationship(
+                                'Attendence',
+                                backref='account',
+                                lazy='dynamic')
     # add bool archive col
 
     def __repr__(self):
@@ -141,8 +148,6 @@ class Students(db.Model):  # needs key constraints, I think
 
         return abc
 
-
-
     def __repr__(self):
         return '{} {} - {}'.format(
                                     self.first_name,
@@ -161,7 +166,7 @@ class Attendence(db.Model):
 class Invoices(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     account_id = db.Column(db.Integer, db.ForeignKey('accounts.id'))
-    invoice_date = db.Column(db.TIMESTAMP(50))
+    invoice_date = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     invoice_total = db.Column(db.Float(10))
     payment_total = db.Column(db.Float(10))
     invoice_due_date = db.Column(db.DateTime(50))
