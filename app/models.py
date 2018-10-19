@@ -159,7 +159,7 @@ class Attendence(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_ID = db.Column(db.Integer, db.ForeignKey('students.id'))
     account_ID = db.Column(db.Integer, db.ForeignKey('accounts.id'))
-    was_present = db.Column(db.TIMESTAMP(50))
+    was_present = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     #  Maybe make this an association table
 
 
