@@ -133,6 +133,7 @@ class Students(db.Model):  # needs key constraints, I think
     last_name = db.Column(db.String(50))
     instrument = db.Column(db.String(50))
     notes = db.Column(db.String(500))
+    
     # add bool archive col
 
     @classmethod
@@ -148,6 +149,26 @@ class Students(db.Model):  # needs key constraints, I think
 
         return abc
 
+    @classmethod
+    def was_present(cls, checkedIn, student):
+        # present = Attendence.query.order_by(datetime)
+        if(checkedIn is True):
+            was_present = Attendence(
+
+                student_ID=student.id,
+                account_ID=student.account_ID)
+
+            db.session.add(was_present)
+            db.session.commit()
+            message = "Checked in!"
+
+            # make better later
+            return message
+        # if(checkedIn is False and present is not None):
+        #     # delete
+        # else
+        #     # do nothing?
+
     def __repr__(self):
         return '{} {} - {}'.format(
                                     self.first_name,
@@ -160,7 +181,7 @@ class Attendence(db.Model):
     student_ID = db.Column(db.Integer, db.ForeignKey('students.id'))
     account_ID = db.Column(db.Integer, db.ForeignKey('accounts.id'))
     was_present = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    #  Maybe make this an association table
+    #  create relationship to students
 
 
 class Invoices(db.Model):

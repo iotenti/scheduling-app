@@ -57,3 +57,7 @@ class AddStudentForm(FlaskForm):
 class AddInstrumentForm(FlaskForm):
     instrument = StringField('Instrument:', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+
+class AttendenceForm(FlaskForm):
+    checkIn = SubmitField('Check In') 

@@ -2,7 +2,19 @@
 
 {% block app_content %}
 <div class="container">
+<h3>{{ moment(g.today).format('LL') }}</h3>
 <h1>Hi, {{ user.first_name }}!</h1>
+    <div>
+        <h1>instrument</h1>
+        {% for attended in attendence %}
+            <p>{{attended.account}}</p>
+            <p>{{attended.student}}</p>
+            <p>{{attended.student_ID}}</p>
+            <p>{{attended.account_ID}}</p>
+            <p>{{ moment(attended.was_present).format('LLL') }}
+            <p>{{ attended.was_present }}</p>
+        {% endfor %}
+    </div>
     <div><h1>instrument</h1>
         {% for instrument in instruments %}
             <p>{{ instrument }}</p>

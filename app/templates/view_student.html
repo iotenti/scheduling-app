@@ -1,4 +1,5 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
 
@@ -16,11 +17,22 @@
                 <p><b>Instrument:</b> {{ student.instrument }}</p>
                 <p><b>Account:</b><a href="{{ url_for('main.view_account', id=student.account_ID) }}">
                                   {{ student.account }}</a></p>
-                <h3>Notes:</h3>
+                <h3>Notes: {{ today }}</h3>
                 <p>{{ student.notes }}</p>
             </td>
-            <td></td>
-            <td></td>
+            <td>
+                <h3>attendence:</h3>
+                {{ wtf.quick_form(form) }}
+            </td>
+            <td>
+                {% for attended in attendence %}
+                    {% if attended.was_present == today %}
+                    <p>student id: {{ attended.student_ID }}</p>
+                    <p>account id: {{ attended.account_ID }}</p>
+                    <p>was present: {{ attended.was_present }}</p>
+                    {% endif %}
+                {% endfor %}
+            </td>
         </tr>
         <tr>
             <td>

@@ -1,26 +1,31 @@
 from flask import render_template, flash, redirect, url_for, request, g, \
     jsonify, current_app
 from flask_login import current_user, login_required
+from datetime import datetime
+from time import strftime
 from app import db
-from app.models import Teachers, Accounts, Students, Instruments
+from app.models import Teachers, Accounts, Students, Instruments, Attendence
 from app.main import bp
-from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm
+from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm, \
+    AttendenceForm
 
 
 @bp.before_app_request
 def before_request():
+    # make sure this is all appropriate. especially g.today
     if current_user.is_authenticated:
         g.accounts = Accounts.view_all_accounts()
         g.account_abc = Accounts.get_account_alphabet(g.accounts)
         g.students = Students.view_all_students()
         g.student_abc = Students.get_student_alphabet(g.students)
+        g.today = datetime.utcnow()
 
 
 @bp.route('/')
 @bp.route('/index')
 @login_required
 def index():
-
+    attendence = Attendence.query.all()
     instruments = Instruments.query.all()
     students = Students.query.all()
     accounts = Accounts.query.all()
@@ -32,6 +37,7 @@ def index():
                             user=user,
                             students=students,
                             accounts=accounts,
+                            attendence=attendence,
                             instruments=instruments)
 
 
@@ -115,6 +121,7 @@ def add_instrument():
         instrument = Instruments(
             instrument=form.instrument.data
         )
+
         db.session.add(instrument)
         db.session.commit()
         flash('Instrument added!')
@@ -142,10 +149,32 @@ def view_account(id):
 @bp.route('/view_student/<id>', methods=['GET', 'POST'])
 @login_required
 def view_student(id):
+    # get student id
     student = Students.query.get(id)
+    account_id = student.account_ID
+    today = strftime('%Y-%m-%d')  # 2018-10-19
+    kwargs = {'student_ID': id, 'account_ID': account_id}
+    attendence = Attendence.query.filter_by(**kwargs).all()
+    for attended in attendence:
+        attended.was_present = strftime('%Y-%m-%d') # <--- incorrect
+    # check to see if checked in
+    # check = attendence.was_present[:-17]
+    checkedIn = False
+    form = AttendenceForm()
+    if form.validate_on_submit():
+        checkedIn = True
+        # pass logic to class methode in students. Don't remember why.
+        check_in = Students.was_present(checkedIn, student)
+        flash(check_in)
+        return redirect(url_for('main.view_student', id=id))
+
     return render_template(
                             'view_student.html',
                             title='Student',
+                            form=form,
+                            checkedIn=checkedIn,
+                            attendence=attendence,
+                            today=today,
                             student=student)
 
 
