@@ -37,13 +37,7 @@
                 {% endif %}
             </td>
             <td>
-                {% for attended in attendence %}
-                    {% if attended.was_present == today %}
-                    <p>student id: {{ attended.student_ID }}</p>
-                    <p>account id: {{ attended.account_ID }}</p>
-                    <p>was present: {{ attended.was_present }}</p>
-                    {% endif %}
-                {% endfor %}
+                
             </td>
         </tr>
         <tr>

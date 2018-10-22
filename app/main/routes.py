@@ -161,21 +161,21 @@ def view_student(id):
     # key word arguments for query
     kwargs = {'student_ID': id, 'account_ID': account_id}
     # query attendence table with kwargs
-    attendence = Attendence.query.filter_by(**kwargs).all()
+    attendence = Attendence. \
+        query.filter_by(**kwargs).order_by(Attendence.id.desc()).first()
     # convert time zone from UTC to local time
     from_zone = tz.tzutc()
     to_zone = tz.tzlocal()
-    # utc = g.today.replace(tzinfo=from_zone)
-    # loop through query results
-    for attended in attendence:
+
+    if attendence is not None:
         # set dates student was present to var 'utc'
-        utc = attended.was_present
+        utc = attendence.was_present
         # tell datetime object the timezone is utc since object is naive
         utc = utc.replace(tzinfo=from_zone)
         # convert time zone to local time zone
-        my_time = utc.astimezone(to_zone)
+        my_time_zone = utc.astimezone(to_zone)
         # check to see if student was checked in today
-        if g.today.strftime('%Y-%m-%d') == my_time.strftime('%Y-%m-%d'):
+        if g.today.strftime('%Y-%m-%d') == my_time_zone.strftime('%Y-%m-%d'):
             # set check_in = true, so template won't display check in option
             checked_in = True
 

@@ -87,11 +87,8 @@ class Accounts(db.Model):  # needs key constrains
     home_phone2 = db.Column(db.String(10), nullable=True)
     students = db.relationship('Students', backref='account', lazy='dynamic')
     invoices = db.relationship('Invoices', backref='account', lazy='dynamic')
+
     # investigate back_populate
-    attendence = db.relationship(
-                                'Attendence',
-                                backref='account',
-                                lazy='dynamic')
     # add bool archive col
 
     def __repr__(self):
@@ -124,6 +121,14 @@ class Instruments(db.Model):
         return '{}'.format(self.instrument)
 
 
+class Attendence(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    student_ID = db.Column(db.Integer, db.ForeignKey('students.id'))
+    account_ID = db.Column(db.Integer, db.ForeignKey('accounts.id'))
+    was_present = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    #  create relationship to students
+
+
 class Students(db.Model):  # needs key constraints, I think
     id = db.Column(db.Integer, primary_key=True)
     account_ID = db.Column(db.Integer, db.ForeignKey('accounts.id'))
@@ -133,7 +138,7 @@ class Students(db.Model):  # needs key constraints, I think
     last_name = db.Column(db.String(50))
     instrument = db.Column(db.String(50))
     notes = db.Column(db.String(500))
-    
+
     # add bool archive col
 
     @classmethod
@@ -155,13 +160,6 @@ class Students(db.Model):  # needs key constraints, I think
                                     self.last_name,
                                     self.instrument)
 
-
-class Attendence(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    student_ID = db.Column(db.Integer, db.ForeignKey('students.id'))
-    account_ID = db.Column(db.Integer, db.ForeignKey('accounts.id'))
-    was_present = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    #  create relationship to students
 
 
 class Invoices(db.Model):
