@@ -7,10 +7,11 @@
     <div>
         <h1>instrument</h1>
         {% for attended in attendence %}
-            <p>{{attended.account}}</p>
-            <p>{{attended.student}}</p>
-            <p>{{attended.student_ID}}</p>
-            <p>{{attended.account_ID}}</p>
+            <p><b>attendence id: {{attended.id}}</b></p>
+            <p>attendence account: {{attended.account}}</p>
+            <p>attendence student: {{attended.student}}</p>
+            <p>attendence student id:{{attended.student_ID}}</p>
+            <p>attendence account id:{{attended.account_ID}}</p>
             <p>{{ moment(attended.was_present).format('LLL') }}
             <p>{{ attended.was_present }}</p>
         {% endfor %}

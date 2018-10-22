@@ -20,9 +20,21 @@
                 <h3>Notes: {{ today }}</h3>
                 <p>{{ student.notes }}</p>
             </td>
-            <td>
-                <h3>attendence:</h3>
-                {{ wtf.quick_form(form) }}
+            <td>    
+                {% if checked_in == False %}
+                    <form action="{{ url_for('main.view_student', id=student.id) }}" method="POST" role="form">
+                        {{ check_in_form.hidden_tag() }}
+                            <h3>attendence:</h3>
+                            {{ check_in_form.check_in(class_='btn btn-default') }}
+                    </form>
+                {% elif checked_in == True %}
+                    <form action="{{ url_for('main.view_student', id=student.id) }}" method="POST" role="form">
+                        {{ undo_check_in_form.hidden_tag() }}
+                            <h3>attendence:</h3>
+                            {{ undo_check_in_form.checked_in(class_='btn btn-success') }}
+                    </form>
+                    
+                {% endif %}
             </td>
             <td>
                 {% for attended in attendence %}

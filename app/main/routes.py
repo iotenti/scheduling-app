@@ -2,6 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, g, \
     jsonify, current_app
 from flask_login import current_user, login_required
 from datetime import datetime
+from dateutil import tz
 from time import strftime
 from app import db
 from app.models import Teachers, Accounts, Students, Instruments, Attendence
@@ -149,30 +150,69 @@ def view_account(id):
 @bp.route('/view_student/<id>', methods=['GET', 'POST'])
 @login_required
 def view_student(id):
+    # not checked in default
+    checked_in = False
     # get student id
     student = Students.query.get(id)
+    # get account id
     account_id = student.account_ID
+    # get today's date. maybe delete this line
     today = strftime('%Y-%m-%d')  # 2018-10-19
+    # key word arguments for query
     kwargs = {'student_ID': id, 'account_ID': account_id}
+    # query attendence table with kwargs
     attendence = Attendence.query.filter_by(**kwargs).all()
+    # convert time zone from UTC to local time
+    from_zone = tz.tzutc()
+    to_zone = tz.tzlocal()
+    # utc = g.today.replace(tzinfo=from_zone)
+    # loop through query results
     for attended in attendence:
-        attended.was_present = strftime('%Y-%m-%d') # <--- incorrect
-    # check to see if checked in
-    # check = attendence.was_present[:-17]
-    checkedIn = False
-    form = AttendenceForm()
-    if form.validate_on_submit():
-        checkedIn = True
-        # pass logic to class methode in students. Don't remember why.
-        check_in = Students.was_present(checkedIn, student)
-        flash(check_in)
+        # set dates student was present to var 'utc'
+        utc = attended.was_present
+        # tell datetime object the timezone is utc since object is naive
+        utc = utc.replace(tzinfo=from_zone)
+        # convert time zone to local time zone
+        my_time = utc.astimezone(to_zone)
+        # check to see if student was checked in today
+        if g.today.strftime('%Y-%m-%d') == my_time.strftime('%Y-%m-%d'):
+            # set check_in = true, so template won't display check in option
+            checked_in = True
+
+    check_in_form = AttendenceForm()
+    undo_check_in_form = AttendenceForm()
+
+    if check_in_form.validate_on_submit() and checked_in is False:
+        # if not yet checked in template displays this version of the form
+        # adds a timestamp to db, checking student in
+        was_present = Attendence(
+
+                student_ID=student.id,
+                account_ID=student.account_ID
+            )
+
+        db.session.add(was_present)
+        db.session.commit()
+
+        return redirect(url_for('main.view_student', id=id))
+
+    # if student is checked in, template dispays this version of the form
+    if undo_check_in_form.validate_on_submit() and checked_in is True:
+        # deletes the last record for that student.
+        delete_record = Attendence. \
+            query.filter_by(**kwargs).order_by(Attendence.id.desc()).first()
+
+        # undoes the check in for today's date
+        db.session.delete(delete_record)
+        db.session.commit()
         return redirect(url_for('main.view_student', id=id))
 
     return render_template(
                             'view_student.html',
                             title='Student',
-                            form=form,
-                            checkedIn=checkedIn,
+                            check_in_form=check_in_form,
+                            undo_check_in_form=undo_check_in_form,
+                            checked_in=checked_in,
                             attendence=attendence,
                             today=today,
                             student=student)

@@ -24,6 +24,7 @@
                 <div class="form-group">
                     {{ form.f_name1.label }}
                     {{ form.f_name1(class_='form-control') }}
+                    {# finish errors thing on all forms... find this later... hopefully #}
                     {% for error in form.f_name1.errors %}
                         <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}

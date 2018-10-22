@@ -149,26 +149,6 @@ class Students(db.Model):  # needs key constraints, I think
 
         return abc
 
-    @classmethod
-    def was_present(cls, checkedIn, student):
-        # present = Attendence.query.order_by(datetime)
-        if(checkedIn is True):
-            was_present = Attendence(
-
-                student_ID=student.id,
-                account_ID=student.account_ID)
-
-            db.session.add(was_present)
-            db.session.commit()
-            message = "Checked in!"
-
-            # make better later
-            return message
-        # if(checkedIn is False and present is not None):
-        #     # delete
-        # else
-        #     # do nothing?
-
     def __repr__(self):
         return '{} {} - {}'.format(
                                     self.first_name,
