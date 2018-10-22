@@ -126,6 +126,8 @@ class Attendence(db.Model):
     student_ID = db.Column(db.Integer, db.ForeignKey('students.id'))
     account_ID = db.Column(db.Integer, db.ForeignKey('accounts.id'))
     was_present = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    student = db.relationship('Students', foreign_keys=[student_ID])
+    account = db.relationship('Accounts', foreign_keys=[account_ID])
     #  create relationship to students
 
 
