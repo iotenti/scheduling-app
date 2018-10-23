@@ -1,4 +1,3 @@
-
 from hashlib import md5
 from time import time
 from datetime import datetime
@@ -161,7 +160,6 @@ class Students(db.Model):  # needs key constraints, I think
                                     self.first_name,
                                     self.last_name,
                                     self.instrument)
-
 
 
 class Invoices(db.Model):

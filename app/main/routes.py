@@ -155,18 +155,22 @@ def view_student(id):
     # get student id
     student = Students.query.get(id)
     # get account id
-    account_id = student.account_ID
+    account_ID = student.account_ID
     # get today's date. maybe delete this line
     today = strftime('%Y-%m-%d')  # 2018-10-19
     # key word arguments for query
-    kwargs = {'student_ID': id, 'account_ID': account_id}
+    kwargs = {'student_ID': id, 'account_ID': account_ID}
     # query attendence table with kwargs
     attendence = Attendence. \
         query.filter_by(**kwargs).order_by(Attendence.id.desc()).first()
     # convert time zone from UTC to local time
     from_zone = tz.tzutc()
     to_zone = tz.tzlocal()
-
+    # get today's date
+    utc = g.today.replace(tzinfo=from_zone)
+    # convert time zone to local time zone
+    today_my_time = utc.astimezone(to_zone)
+    # check to see if student was checked in today
     if attendence is not None:
         # set dates student was present to var 'utc'
         utc = attendence.was_present
@@ -175,8 +179,10 @@ def view_student(id):
         # convert time zone to local time zone
         my_time_zone = utc.astimezone(to_zone)
         # check to see if student was checked in today
-        if g.today.strftime('%Y-%m-%d') == my_time_zone.strftime('%Y-%m-%d'):
+        if (today_my_time.strftime('%Y-%m-%d') 
+                == my_time_zone.strftime('%Y-%m-%d')):
             # set check_in = true, so template won't display check in option
+            print(my_time_zone)
             checked_in = True
 
     check_in_form = AttendenceForm()

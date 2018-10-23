@@ -20,20 +20,29 @@
                 <h3>Notes:</h3>
                 <p>{{ student.notes }}</p>
             </td>
-            <td>    
+            <td>
+            <!-- check if the student is checked in -->
+            <!-- if not allow check in, otherwise allow undo-check in -->
                 {% if checked_in == False %}
                     <form action="{{ url_for('main.view_student', id=student.id) }}" method="POST" role="form">
                         {{ check_in_form.hidden_tag() }}
-                            <h3>attendence:</h3>
-                            {{ check_in_form.check_in(class_='btn btn-default') }}
+                        <h3>attendence:</h3>
+                        {{ check_in_form.check_in(class_='btn btn-default') }}
                     </form>
+                    {% if attendence %}
+                        <div style="margin-top:5px;">
+                            <p>last seen: {{ moment(attendence.was_present).format('LLL') }}</p>
+                        </div>
+                    {% endif %}
                 {% elif checked_in == True %}
                     <form action="{{ url_for('main.view_student', id=student.id) }}" method="POST" role="form">
                         {{ undo_check_in_form.hidden_tag() }}
-                            <h3>attendence:</h3>
-                            {{ undo_check_in_form.checked_in(class_='btn btn-success') }}
+                        <h3>attendence:</h3>
+                        {{ undo_check_in_form.checked_in(class_='btn btn-success') }}
                     </form>
-                    
+                    <div style="margin-top:5px;">
+                        <p>{{ moment(attendence.was_present).format('LLL') }}</p>
+                    </div>
                 {% endif %}
             </td>
             <td>
