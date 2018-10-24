@@ -61,8 +61,8 @@
             
         </tr>
     </table>
-    </div>
-    <div class="modal fade" id="editModal">
+</div>
+<div class="modal fade" id="editModal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -90,10 +90,10 @@
                     {% else %}
                     <div class="col-md-4"></div>
                     {% endif %}
-                    {% if students %}
+                    {% if account.students %}
                     <div class="col-md-4">
                         <h3>Students:</h3>
-                        {% for student in students%}
+                        {% for student in account.students %}
                             <p>{{ student }}</p>
                         {% endfor %}
                     </div>

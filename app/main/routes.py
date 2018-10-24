@@ -81,6 +81,7 @@ def sign_up():
 # pass account id in link - use to add student
 def add_student(id):
     form = AddStudentForm()
+    h1 = 'Add A Student'
     account = Accounts.query.get(id)
     # if for validates
     if form.validate_on_submit():
@@ -107,9 +108,10 @@ def add_student(id):
             print("not valid")
 
     return render_template(
-                            'add_student.html',
+                            'student_crud.html',
                             title='Add Student',
                             account=account,
+                            h1=h1,
                             form=form)
 
 
@@ -137,7 +139,7 @@ def add_instrument():
 @bp.route('/view_account/<id>', methods=['GET', 'POST'])
 @login_required
 def view_account(id):
-    account = Accounts.query.get(id)
+    account = Accounts.query.filter_by(id=id).first_or_404()
     # students = Students.query.filter_by(account_ID=id).all()
     # probably do a join here
 
@@ -153,7 +155,7 @@ def view_student(id):
     # not checked in default
     checked_in = False
     # get student id
-    student = Students.query.get(id)
+    student = Students.query.filter_by(id=id).first_or_404()
     # get account id
     account_ID = student.account_ID
     # get today's date. maybe delete this line
@@ -204,7 +206,7 @@ def view_student(id):
 
     # if student is checked in, template dispays this version of the form
     if undo_check_in_form.validate_on_submit() and checked_in is True:
-        # deletes the last record for that student.
+        # deletes the last record for that student in attendence table
         delete_record = Attendence. \
             query.filter_by(**kwargs).order_by(Attendence.id.desc()).first()
 
@@ -227,7 +229,7 @@ def view_student(id):
 @bp.route('/edit_account/<id>', methods=['GET', 'POST'])
 @login_required
 def edit_account(id):
-    account_in_db = Accounts.query.get(id)
+    account_in_db = Accounts.query.filter_by(id=id).first_or_404()
     form = AddAccountForm()
     if form.validate_on_submit():
 
@@ -268,8 +270,16 @@ def edit_account(id):
 @bp.route('/delete_account/<id>', methods=['GET', 'POST'])
 @login_required
 def delete_account(id):
-    # make casscade delete
-    account = Accounts.query.get(id)
+    # figure out how to cascade attendence too
+    account = Accounts.query.filter_by(id=id).first_or_404()
+
+    attendence = Attendence. \
+        query.filter_by(account_ID=id).all()
+
+    if attendence:
+        for attended in attendence:
+            db.session.delete(attended)
+
     db.session.delete(account)
     db.session.commit()
 
@@ -280,3 +290,63 @@ def delete_account(id):
                             'delete_account.html',
                             account=account,
                             title='Delete')
+
+
+@bp.route('/delete_student/<id>', methods=['GET', 'POST'])
+@login_required
+def delete_student(id):
+    # figure out how to cascade attendence too
+    student = Students.query.filter_by(id=id).first_or_404()
+
+    attendence = Attendence. \
+        query.filter_by(student_ID=id).all()
+
+    if attendence:
+        for attended in attendence:
+            db.session.delete(attended)
+
+    db.session.delete(student)
+    db.session.commit()
+
+    flash('Student Deleted')
+    return redirect(url_for('main.index'))
+
+    return render_template(
+                            'delete_student.html',
+                            student=student,
+                            title='Delete')
+
+
+@bp.route('/edit_student/<id>', methods=['GET', 'POST'])
+@login_required
+def edit_student(id):
+    student_in_db = Students.query.filter_by(id=id).first_or_404()
+    form = AddStudentForm()
+    h1 = 'Edit Student'
+    if form.validate_on_submit():
+
+        teacher = form.teacher_ID.data
+        instrument = form.instrument.data
+
+        student_in_db.teacher_ID = teacher.id
+        student_in_db.first_name = form.first_name.data
+        student_in_db.last_name = form.last_name.data
+        student_in_db.instrument = instrument.instrument
+        student_in_db.notes = form.notes.data
+        db.session.commit()
+
+        flash('Your changes have been saved.')
+        return redirect(url_for('main.view_student', id=id))
+
+    elif request.method == 'GET':
+
+        form.first_name.data = student_in_db.first_name
+        form.last_name.data = student_in_db.last_name
+        form.notes.data = student_in_db.notes
+
+    return render_template(
+                            'student_crud.html',
+                            title='Edit Student',
+                            form=form,
+                            h1=h1,
+                            student_in_db=student_in_db)

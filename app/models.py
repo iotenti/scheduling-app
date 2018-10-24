@@ -84,7 +84,11 @@ class Accounts(db.Model):  # needs key constrains
     account_bal = db.Column(db.Float(10))
     account_credit = db.Column(db.Float(10))
     home_phone2 = db.Column(db.String(10), nullable=True)
-    students = db.relationship('Students', backref='account', lazy='dynamic')
+    students = db.relationship(
+                            'Students',
+                            backref='account',
+                            lazy='dynamic',
+                            cascade='delete')
     invoices = db.relationship('Invoices', backref='account', lazy='dynamic')
 
     # investigate back_populate
@@ -134,7 +138,6 @@ class Students(db.Model):  # needs key constraints, I think
     id = db.Column(db.Integer, primary_key=True)
     account_ID = db.Column(db.Integer, db.ForeignKey('accounts.id'))
     teacher_ID = db.Column(db.Integer, db.ForeignKey('teachers.id'))
-    attendence_ID = db.Column(db.Integer, db.ForeignKey('attendence.id'))
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
     instrument = db.Column(db.String(50))
