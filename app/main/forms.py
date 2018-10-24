@@ -62,3 +62,4 @@ class AddInstrumentForm(FlaskForm):
 class AttendenceForm(FlaskForm):
     check_in = SubmitField('Check In')
     checked_in = SubmitField('Checked In')
+

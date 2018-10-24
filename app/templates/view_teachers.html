@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <br>
+    <table class="table table-hover">
+        {% for teacher in teachers %}
+            <tr>
+                <td>
+                    <h3><a href="{{ url_for('main.view_teacher', id=teacher.id) }}">{{ teacher.first_name }} {{ teacher.last_name }}</a></h3>
+                    <p><b>ID:</b> {{ teacher.id }}</p>
+                    <p><b>Username:</b> {{ teacher.username }}</p>
+                    <p><b>First Name:</b> {{ teacher.first_name }}</p>
+                    <p><b>Last Name:</b> {{ teacher.last_name }}</p>
+                    <p><b>Phone:</b> {{ teacher.phone_num }}</p>
+                    <p><b>Address:</b> {{ teacher.address }}</p>
+                    <p><b>City:</b> {{ teacher.city }}</p>
+                    <p><b>Zip:</b> {{ teacher.zipcode }}</p>
+                    <p><b>State:</b> {{ teacher.state }}</p>
+                    <p><b>Email:</b> {{ teacher.email }}</p>
+                    <p><b>Notes:</b> {{ teacher.notes }}</p>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

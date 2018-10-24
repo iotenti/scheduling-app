@@ -7,6 +7,7 @@ from app.auth.forms import LoginForm, TeacherRegistrationForm
 from app.models import Teachers
 # from app.auth.email import send_password_reset_email
 
+
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -34,12 +35,13 @@ def logout():
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
+        # flash(current_user.email)
         return redirect(url_for('main.index'))
     form = TeacherRegistrationForm()
     if form.validate_on_submit():
         user = Teachers(
-                    username=form.username.data, 
-                    email=form.email.data, 
+                    username=form.username.data,
+                    email=form.email.data,
                     first_name=form.first_name.data,
                     last_name=form.last_name.data,
                     phone_num=form.phone_num.data,

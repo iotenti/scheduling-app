@@ -149,6 +149,28 @@ def view_account(id):
                             account=account)
 
 
+@bp.route('/view_all_teachers', methods=['GET', 'POST'])
+@login_required
+def view_all_teachers():
+    teachers = Teachers.query.all()
+
+    return render_template(
+                            'view_teachers.html',
+                            title='Teachers',
+                            teachers=teachers)
+
+
+@bp.route('/view_teacher/<id>', methods=['GET', 'POST'])
+@login_required
+def view_teacher(id):
+    teacher = Teachers.query.get(id)
+
+    return render_template(
+                        'view_teacher.html',
+                        title='Teacher',
+                        teacher=teacher)
+
+
 @bp.route('/view_student/<id>', methods=['GET', 'POST'])
 @login_required
 def view_student(id):
@@ -314,6 +336,24 @@ def delete_student(id):
     return render_template(
                             'delete_student.html',
                             student=student,
+                            title='Delete')
+
+
+@bp.route('/delete_teacher/<id>', methods=['GET', 'POST'])
+@login_required
+def delete_teacher(id):
+    # figure out how to cascade attendence too
+    teacher = Teachers.query.filter_by(id=id).first_or_404()
+
+    db.session.delete(teacher)
+    db.session.commit()
+    # remind me
+    flash('Teacher FIRED')
+    return redirect(url_for('main.index'))
+
+    return render_template(
+                            'delete_teacher.html',
+                            teacher=teacher,
                             title='Delete')
 
 

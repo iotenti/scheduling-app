@@ -30,6 +30,8 @@
                     <li><a id="studentsLink" href="javascript: void(0);">Students</a></li>
                     <!-- make admin only link -->
                     <li><a href="{{ url_for('main.add_instrument') }}">Add Instrument</a></li>
+                    <li><a href="{{ url_for('auth.register') }}">Add Teacher</a></li>
+                    <li><a href="{{ url_for('main.view_all_teachers') }}">Teachers</a></li>
                 </ul>
                 
                 {% if g.search_form %}

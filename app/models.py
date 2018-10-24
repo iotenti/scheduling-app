@@ -30,9 +30,9 @@ class Teachers(UserMixin, db.Model):
     city = db.Column(db.String(50))
     state = db.Column(db.String(2))
     zipcode = db.Column(db.String(5))
+    is_admin = db.Column(db.Boolean, default=False, nullable=True)
     notes = db.Column(db.String(500))
     students = db.relationship('Students', backref='teacher', lazy='dynamic')
-    # add admin field
     # format first and last name to capitalize
 
     def __repr__(self):

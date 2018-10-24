@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from wtforms import StringField, PasswordField, \
+    BooleanField, SubmitField, TextAreaField
+from wtforms.validators import ValidationError, \
+    DataRequired, Email, EqualTo
 from app.models import Teachers
 
 
@@ -21,9 +23,12 @@ class TeacherRegistrationForm(FlaskForm):
     city = StringField('City', validators=[DataRequired()])
     state = StringField('State', validators=[DataRequired()])
     zipcode = StringField('Zip Code', validators=[DataRequired()])
+    is_admin = BooleanField('Administrator')
     notes = TextAreaField('Notes', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    password2 = PasswordField(
+                            'Repeat Password',
+                            validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Add Teacher')
 
     def validate_username(self, username):
