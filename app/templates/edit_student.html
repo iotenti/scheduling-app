@@ -4,8 +4,8 @@
 {% block app_content %}
     <h1>{{ h1 }}</h1>
     <h3>
-        <a href="{{ url_for('main.view_account', id=student_in_db.account_ID) }}">
-            <span style="color:rgb(101, 114, 128);">Account:</span> {{ student_in_db.account }}
+        <a href="{{ url_for('main.view_account', id=student.account_ID) }}">
+            <span style="color:rgb(101, 114, 128);">Account:</span> {{ student.account }}
         </a>
     </h3>
     <div class="row">

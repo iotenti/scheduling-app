@@ -3,24 +3,67 @@
 
 {% block app_content %}
     <br>
-    <table class="table table-hover">
+    <table class="table table-hover admin-table">
+        <tr>
         {% for teacher in teachers %}
-            <tr>
-                <td>
-                    <h3><a href="{{ url_for('main.view_teacher', id=teacher.id) }}">{{ teacher.first_name }} {{ teacher.last_name }}</a></h3>
-                    <p><b>ID:</b> {{ teacher.id }}</p>
-                    <p><b>Username:</b> {{ teacher.username }}</p>
-                    <p><b>First Name:</b> {{ teacher.first_name }}</p>
-                    <p><b>Last Name:</b> {{ teacher.last_name }}</p>
-                    <p><b>Phone:</b> {{ teacher.phone_num }}</p>
-                    <p><b>Address:</b> {{ teacher.address }}</p>
-                    <p><b>City:</b> {{ teacher.city }}</p>
-                    <p><b>Zip:</b> {{ teacher.zipcode }}</p>
-                    <p><b>State:</b> {{ teacher.state }}</p>
-                    <p><b>Email:</b> {{ teacher.email }}</p>
-                    <p><b>Notes:</b> {{ teacher.notes }}</p>
-                </td>
-            </tr>
+            <td style="width:50px;">
+                <div>
+                    <p>
+                        <h3>{{ teacher }}</h3>
+                        {% if teacher.is_admin %}
+                            <p class="success"><b>Administrator</b></p>
+                        {% endif %}
+                        {{ teacher.email }}
+                        <br>{# teacher.phone_num #}
+                        508-951-2022
+                    </p>
+                    <p>
+                        {{ teacher.address }},
+                        <br>
+                        {{ teacher.city }}, {{ teacher.state }},
+                        {{ teacher.zipcode }}
+                    </p>
+                </div>
+                <div>
+                    <h3>Notes:</h3>
+                    <p>{{ teacher.notes }}</p>
+                <div>
+            </td>
         {% endfor %}
+        </tr>
+        <tr>
+        {% for teacher in teachers %}
+            <td>
+                <div class="admin-controls">
+                    <a href="{{ url_for('main.edit_teacher', id=teacher.id) }}">Edit</a>
+                    &nbsp; | &nbsp;
+                    <a href="#" data-toggle="modal" data-target="#delete-{{teacher.id}}">Delete</a>
+                </div>
+            </td>
+        {% endfor %}
+        </tr>
     </table>
+{% for teacher in teachers %}
+<div class="modal fade" id="delete-{{ teacher.id }}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1>Are you sure you want to delete this teacher?</h1>
+            </div>
+            <div class="modal-body modal-xl">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h3>{{ teacher }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
+                <a href="{{ url_for('main.delete_teacher', id=teacher.id) }}" class="btn btn-danger" value="delete">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
 {% endblock %}

@@ -9,6 +9,7 @@ from app.models import Teachers, Accounts, Students, Instruments, Attendence
 from app.main import bp
 from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm, \
     AttendenceForm
+from app.auth.forms import TeacherRegistrationForm
 
 
 @bp.before_app_request
@@ -108,7 +109,7 @@ def add_student(id):
             print("not valid")
 
     return render_template(
-                            'student_crud.html',
+                            'add_student.html',
                             title='Add Student',
                             account=account,
                             h1=h1,
@@ -360,7 +361,7 @@ def delete_teacher(id):
 @bp.route('/edit_student/<id>', methods=['GET', 'POST'])
 @login_required
 def edit_student(id):
-    student_in_db = Students.query.filter_by(id=id).first_or_404()
+    student = Students.query.filter_by(id=id).first_or_404()
     form = AddStudentForm()
     h1 = 'Edit Student'
     if form.validate_on_submit():
@@ -368,11 +369,11 @@ def edit_student(id):
         teacher = form.teacher_ID.data
         instrument = form.instrument.data
 
-        student_in_db.teacher_ID = teacher.id
-        student_in_db.first_name = form.first_name.data
-        student_in_db.last_name = form.last_name.data
-        student_in_db.instrument = instrument.instrument
-        student_in_db.notes = form.notes.data
+        student.teacher_ID = teacher.id
+        student.first_name = form.first_name.data
+        student.last_name = form.last_name.data
+        student.instrument = instrument.instrument
+        student.notes = form.notes.data
         db.session.commit()
 
         flash('Your changes have been saved.')
@@ -380,13 +381,59 @@ def edit_student(id):
 
     elif request.method == 'GET':
 
-        form.first_name.data = student_in_db.first_name
-        form.last_name.data = student_in_db.last_name
-        form.notes.data = student_in_db.notes
+        form.first_name.data = student.first_name
+        form.last_name.data = student.last_name
+        form.notes.data = student.notes
 
     return render_template(
-                            'student_crud.html',
+                            'edit_student.html',
                             title='Edit Student',
                             form=form,
                             h1=h1,
-                            student_in_db=student_in_db)
+                            student=student)
+
+
+@bp.route('/edit_teacher/<id>', methods=['GET', 'POST'])
+@login_required
+def edit_teacher(id):
+    edit = True
+    teacher = Teachers.query.filter_by(id=id).first_or_404()
+    form = TeacherRegistrationForm()
+    if form.validate_on_submit():
+
+        teacher.username = form.username.data
+        teacher.email = form.email.data
+        teacher.first_name = form.first_name.data
+        teacher.last_name = form.last_name.data
+        teacher.phone_num = form.phone_num.data
+        teacher.address = form.address.data
+        teacher.city = form.city.data
+        teacher.state = form.state.data
+        teacher.zipcode = form.zipcode.data
+        teacher.is_admin = form.is_admin.data
+        teacher.notes = form.notes.data
+        db.session.commit()
+
+        flash('Your changes have been saved.')
+        return redirect(url_for('main.view_account', id=id))
+
+    elif request.method == 'GET':
+
+        form.username.data = teacher.username
+        form.email.data = teacher.email
+        form.first_name.data = teacher.first_name
+        form.last_name.data = teacher.last_name
+        form.phone_num.data = teacher.phone_num
+        form.address.data = teacher.address
+        form.city.data = teacher.city
+        form.state.data = teacher.state
+        form.zipcode.data = teacher.zipcode
+        form.is_admin.data = teacher.is_admin
+        form.notes.data = teacher.notes
+
+    return render_template(
+                            'edit_teacher.html',
+                            form=form,
+                            edit=edit,
+                            teacher=teacher,
+                            title='Edit')

@@ -34,9 +34,6 @@ def logout():
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
-    if current_user.is_authenticated:
-        # flash(current_user.email)
-        return redirect(url_for('main.index'))
     form = TeacherRegistrationForm()
     if form.validate_on_submit():
         user = Teachers(
@@ -49,13 +46,14 @@ def register():
                     city=form.city.data,
                     state=form.state.data,
                     zipcode=form.zipcode.data,
+                    is_admin=form.is_admin.data,
                     notes=form.notes.data
                 )
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Congratulations, you are now teacher!')
-        return redirect(url_for('auth.login'))
+        flash('Teacher added.')
+        return redirect(url_for('main.index'))
     return render_template('auth/register.html', title='Register',
                            form=form)
 

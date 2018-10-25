@@ -28,10 +28,12 @@
                     <!-- not sure if this javascript:; thing is stupid? research -->
                     <li><a id="accountsLink" href="javascript: void(0);">Accounts</a></li>
                     <li><a id="studentsLink" href="javascript: void(0);">Students</a></li>
+                    <li><a href="{{ url_for('main.view_all_teachers') }}">Teachers</a></li>
                     <!-- make admin only link -->
+                    {% if current_user.is_admin %}
                     <li><a href="{{ url_for('main.add_instrument') }}">Add Instrument</a></li>
                     <li><a href="{{ url_for('auth.register') }}">Add Teacher</a></li>
-                    <li><a href="{{ url_for('main.view_all_teachers') }}">Teachers</a></li>
+                    {% endif %}
                 </ul>
                 
                 {% if g.search_form %}
@@ -78,7 +80,7 @@
                 {% endfor %}
             </dl>
         </div>
-        <div id="viewStudents" class="accounts-container hidden" style="position:absolute;">
+        <div id="viewStudents" class="students-container hidden" style="position:absolute;">
             <div style="text-align:center; position:relative;">
                 <h1>Students</h1>
             </div>
@@ -132,7 +134,7 @@
     var studentsLink = $('#studentsLink')
     var accountsContainer = $("#viewAccounts")
     var studentsContainer = $("#viewStudents")
-
+   
     button.click(function(){
         $(".anotherContact").toggleClass("hidden");
          $(".add-contact-headline").toggleClass("hide");

@@ -3,10 +3,10 @@
 
 {% block app_content %}
 
-    <h1>Add A Teacher</h1>
+    <h1>Edit Teacher</h1>
     <br>
 
-    <form action="{{ url_for('auth.register') }}" method="POST" role="form">
+    <form action="{{ url_for('main.edit_teacher', id=teacher.id) }}" method="POST" role="form">
      {{ form.hidden_tag() }}
         <div class="row">
             <div class="col-md-4">
@@ -128,27 +128,7 @@
             <div class="col-md-4"></div>
             <div class="col-md-4"></div>
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    {{ form.password.label }}
-                    {{ form.password(class_='form-control') }}
-                    {% for error in form.password.errors %}
-                        <span style="color: red;">{{ error }}</span>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    {{ form.password2.label }}
-                    {{ form.password2(class_='form-control') }}
-                    {% for error in form.password2.errors %}
-                        <span style="color: red;">{{ error }}</span>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col-md-4"></div>
-        </div>
+    
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">

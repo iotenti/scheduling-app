@@ -6,30 +6,38 @@
 <table class="table table-hover">
     <tr>
         <td>
-            <h3>{{ teacher.first_name }} {{ teacher.last_name }}</h3>
-            <p><b>ID:</b> {{ teacher.id }}</p>
-            <p><b>Username:</b> {{ teacher.username }}</p>
-            <p><b>First Name:</b> {{ teacher.first_name }}</p>
-            <p><b>Last Name:</b> {{ teacher.last_name }}</p>
-            <p><b>Phone:</b> {{ teacher.phone_num }}</p>
-            <p><b>Address:</b> {{ teacher.address }}</p>
-            <p><b>City:</b> {{ teacher.city }}</p>
-            <p><b>Zip:</b> {{ teacher.zipcode }}</p>
-            <p><b>State:</b> {{ teacher.state }}</p>
-            <p><b>Email:</b> {{ teacher.email }}</p>
-            <p><b>Notes:</b> {{ teacher.notes }}</p>
+            <div>
+                <p>
+                    <h3>{{ teacher }}</h3>
+                    {% if teacher.is_admin %}
+                        <p class="success"><b>Administrator</b></p>
+                    {% endif %}
+                    {{ teacher.email }}
+                    <br>{# teacher.phone_num #}
+                    508-951-2022
+                </p>
+                <p>
+                    {{ teacher.address }},
+                    <br>
+                    {{ teacher.city }}, {{ teacher.state }},
+                    {{ teacher.zipcode }}
+                </p>
+            </div>
+            <div>
+                <h3>Notes:</h3>
+                <p>{{ teacher.notes }}</p>
+            <div>
         </td>
+        
     </tr>
     <tr>
         <td>
-            <div style="text-align:left;">
+            <div class="admin-controls">
                 <a href="{# url_for('main.edit_teacher', id=teacher.id) #}">Edit</a>
                 &nbsp; | &nbsp;
                 <a href="#" data-toggle="modal" data-target="#editModal">Delete</a>
             </div>
         </td>
-        <td></td>
-        <td></td>
     </tr>
 </table>
 <div class="modal fade" id="editModal">
