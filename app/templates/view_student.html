@@ -35,7 +35,7 @@
                         {{ undo_check_in_form.checked_in(class_='btn btn-success') }}
                     </form>
                     <div style="margin-top:5px;">
-                        <p>{{ moment(attendence.was_present).format('LLL') }}</p>
+                        <p>Last in: {{ moment(attendence.was_present).format('LLL') }}</p>
                     </div>
                 {% endif %}
             </td>

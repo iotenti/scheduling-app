@@ -40,3 +40,16 @@ class TeacherRegistrationForm(FlaskForm):
         user = Teachers.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email address.')
+
+
+class EditTeacherForm(FlaskForm):
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    phone_num = StringField('Phone Number', validators=[DataRequired()])
+    address = StringField('Address', validators=[DataRequired()])
+    city = StringField('City', validators=[DataRequired()])
+    state = StringField('State', validators=[DataRequired()])
+    zipcode = StringField('Zip Code', validators=[DataRequired()])
+    is_admin = BooleanField('Administrator')
+    notes = TextAreaField('Notes', validators=[DataRequired()])
+    submit = SubmitField('Add Teacher')

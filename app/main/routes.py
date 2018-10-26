@@ -9,7 +9,7 @@ from app.models import Teachers, Accounts, Students, Instruments, Attendence
 from app.main import bp
 from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm, \
     AttendenceForm
-from app.auth.forms import TeacherRegistrationForm
+from app.auth.forms import EditTeacherForm
 
 
 @bp.before_app_request
@@ -103,7 +103,7 @@ def add_student(id):
         db.session.commit()
         flash('Student added!')
 
-        return redirect(url_for('main.add_student', id=id))
+        return redirect(url_for('main.view_account', id=id))
 
     else:
             print("not valid")
@@ -141,8 +141,6 @@ def add_instrument():
 @login_required
 def view_account(id):
     account = Accounts.query.filter_by(id=id).first_or_404()
-    # students = Students.query.filter_by(account_ID=id).all()
-    # probably do a join here
 
     return render_template(
                             'view_account.html',
@@ -156,7 +154,7 @@ def view_all_teachers():
     teachers = Teachers.query.all()
 
     return render_template(
-                            'view_teachers.html',
+                            'view_all_teachers.html',
                             title='Teachers',
                             teachers=teachers)
 
@@ -396,13 +394,10 @@ def edit_student(id):
 @bp.route('/edit_teacher/<id>', methods=['GET', 'POST'])
 @login_required
 def edit_teacher(id):
-    edit = True
     teacher = Teachers.query.filter_by(id=id).first_or_404()
-    form = TeacherRegistrationForm()
+    form = EditTeacherForm()
     if form.validate_on_submit():
 
-        teacher.username = form.username.data
-        teacher.email = form.email.data
         teacher.first_name = form.first_name.data
         teacher.last_name = form.last_name.data
         teacher.phone_num = form.phone_num.data
@@ -412,15 +407,14 @@ def edit_teacher(id):
         teacher.zipcode = form.zipcode.data
         teacher.is_admin = form.is_admin.data
         teacher.notes = form.notes.data
-        db.session.commit()
 
+        db.session.commit()
+        print('valid')
         flash('Your changes have been saved.')
-        return redirect(url_for('main.view_account', id=id))
+        return redirect(url_for('main.view_all_teachers'))
 
     elif request.method == 'GET':
-
-        form.username.data = teacher.username
-        form.email.data = teacher.email
+        print('here')
         form.first_name.data = teacher.first_name
         form.last_name.data = teacher.last_name
         form.phone_num.data = teacher.phone_num
@@ -431,9 +425,9 @@ def edit_teacher(id):
         form.is_admin.data = teacher.is_admin
         form.notes.data = teacher.notes
 
+    print('not valid')
     return render_template(
                             'edit_teacher.html',
                             form=form,
-                            edit=edit,
                             teacher=teacher,
                             title='Edit')
