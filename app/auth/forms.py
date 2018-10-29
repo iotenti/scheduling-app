@@ -32,13 +32,13 @@ class TeacherRegistrationForm(FlaskForm):
     submit = SubmitField('Add Teacher')
 
     def validate_username(self, username):
-        user = Teachers.query.filter_by(username=username.data).first()
-        if user is not None:
+        teacher = Teachers.query.filter_by(username=username.data).first()
+        if teacher is not None:
             raise ValidationError('Please use a different username.')
 
     def validate_email(self, email):
-        user = Teachers.query.filter_by(email=email.data).first()
-        if user is not None:
+        teacher = Teachers.query.filter_by(email=email.data).first()
+        if teacher is not None:
             raise ValidationError('Please use a different email address.')
 
 

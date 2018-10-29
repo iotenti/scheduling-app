@@ -2,7 +2,6 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
-    
     <h1>Sign Up!</h1>
     <br>
 
@@ -31,6 +30,9 @@
                 <div class="form-group">
                     {{ form.f_name1.label }}
                     {{ form.f_name1(class_='form-control') }}
+                    {% for error in form.f_name1.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
                 </div>
             </div>
             <div class="col-md-4">
@@ -38,6 +40,9 @@
                     <div class="form-group">
                         {{ form.f_name2.label }}
                         {{ form.f_name2(class_='form-control') }}
+                        {% for error in form.f_name2.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
                     </div>
                 </span>
             </div>
@@ -51,6 +56,9 @@
                 <div class="form-group">
                     {{ form.l_name1.label }}
                     {{ form.l_name1(class_='form-control') }}
+                    {% for error in form.l_name1.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
                 </div>
             </div>
             <div class="col-md-4">
@@ -58,6 +66,9 @@
                     <div class="form-group">
                         {{ form.l_name2.label }}
                         {{ form.l_name2(class_='form-control') }}
+                        {% for error in form.l_name2.errors %}
+                            <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
                     </div>
                 </span>
             </div>
@@ -69,6 +80,9 @@
                 <div class="form-group">
                     {{ form.cell_phone1.label }}
                     {{ form.cell_phone1(class_='form-control') }}
+                    {% for error in form.cell_phone1.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
                 </div>
             </div>
             <div class="col-md-4">
@@ -76,6 +90,9 @@
                     <div class="form-group">
                         {{ form.cell_phone2.label }}
                         {{ form.cell_phone2(class_='form-control') }}
+                        {% for error in form.cell_phone2.errors %}
+                            <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
                     </div>
                 </span>
             </div>
@@ -87,6 +104,9 @@
                 <div class="form-group">
                     {{ form.email1.label }}
                     {{ form.email1(class_='form-control') }}
+                    {% for error in form.email1.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
                 </div>
             </div>
             <div class="col-md-4">
@@ -94,6 +114,11 @@
                     <div class="form-group">
                         {{ form.email2.label }}
                         {{ form.email2(class_='form-control') }}
+                        {% for error in form.email2.errors %}
+                            <h1>hi</h1>
+                            <script>show();</script>
+                            <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
                     </div>
                 </span>
             </div>
@@ -105,6 +130,9 @@
                 <div class="form-group">
                     {{ form.home_phone1.label }}
                     {{ form.home_phone1(class_='form-control') }}
+                    {% for error in form.home_phone1.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
                 </div>
             </div>
             <div class="col-md-4">
@@ -112,6 +140,9 @@
                     <div class="form-group">
                         {{ form.home_phone2.label }}
                         {{ form.home_phone2(class_='form-control') }}
+                        {% for error in form.home_phone2.errors %}
+                            <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
                     </div>
                 </span>
             </div>

@@ -1,6 +1,17 @@
 .float-right{
     float: right;
 }
+.avatar{
+  float: left;
+  border-radius: 50%;
+  margin-right: 75px;
+  margin-top: 10px;
+
+}
+.teacher-text{
+  overflow: hidden;
+}
+
 .success{
     color: #5cb85c;
 }
@@ -81,7 +92,7 @@ dd {
     white-space: nowrap;
 }
 .admin-controls{
-    text-align: left;
+    text-align: left; 
 }
 .admin-table{
     width: 1140px;

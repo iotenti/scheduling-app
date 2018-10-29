@@ -144,6 +144,10 @@
             button.removeClass("fa-minus-square").addClass("fa-plus-square");
         }
     });
+    
+    function show(){
+        $(".anotherContact").toggleClass("hidden");
+    }
 
     function hide(e){
         if(!accountsLink.is(e.target) && !accountsContainer.hasClass("hidden")){

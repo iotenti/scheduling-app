@@ -10,6 +10,7 @@ from app.main import bp
 from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm, \
     AttendenceForm
 from app.auth.forms import EditTeacherForm
+from sqlalchemy import or_
 
 
 @bp.before_app_request
@@ -49,29 +50,57 @@ def sign_up():
     form = AddAccountForm()
     # if from validates
     if form.validate_on_submit():
-        # provide logic as to not duplicate account
-        # provide logid to hide half of form unless second contact needed
-        # add formatting so names are capitolized
-        account = Accounts(
-            f_name1=form.f_name1.data,
-            l_name1=form.l_name1.data,
-            cell_phone1=form.cell_phone1.data,
-            email1=form.email1.data,
-            home_phone1=form.home_phone1.data,
-            f_name2=form.f_name2.data,
-            l_name2=form.l_name2.data,
-            cell_phone2=form.cell_phone2.data,
-            email2=form.email2.data,
-            home_phone2=form.home_phone2.data
-        )
-        db.session.add(account)
-        db.session.commit()
-        flash('Account added!')
-        return redirect(url_for('main.add_student', id=account.id))
-        # else:
-        #     flash('This account already exists')
-        #     return redirect(url_for('main.index')) # or somewhere
-        #     more relevent
+        # email and phone validator
+
+        # capitalize names
+        f_name1 = form.f_name1.data.capitalize()
+        f_name2 = form.f_name2.data.capitalize()
+        l_name1 = form.l_name1.data.capitalize()
+        l_name2 = form.l_name2.data.capitalize()
+
+        # if email2 is blank string insert None
+        if form.email2.data is "":
+            email2 = None
+        else:
+            email2 = form.email2.data
+
+        # check to see if account exists
+        check_email1 = Accounts.query.filter(
+            or_(
+                Accounts.email1 == form.email1.data,
+                Accounts.email2 == form.email1.data)).first()
+        # seperated into 2 queries so I can be specific with error message.
+        check_email2 = Accounts.query.filter(
+            or_(
+                Accounts.email1 == form.email2.data,
+                Accounts.email2 == form.email2.data)).first()
+
+        # check to see if email is in db already
+        if check_email1 is not None:
+            flash('An account with the primary email \
+                address already exists.')
+            return redirect(url_for('main.sign_up'))
+        elif check_email2 is not None:
+            flash('An account with the secondary email \
+                address already exists.')
+            return redirect(url_for('main.sign_up'))
+        else:
+            account = Accounts(
+                f_name1=f_name1,
+                l_name1=l_name1,
+                cell_phone1=form.cell_phone1.data,
+                email1=form.email1.data,
+                home_phone1=form.home_phone1.data,
+                f_name2=f_name2,
+                l_name2=l_name2,
+                cell_phone2=form.cell_phone2.data,
+                email2=email2,
+                home_phone2=form.home_phone2.data
+            )
+            db.session.add(account)
+            db.session.commit()
+            flash('Account added!')
+            return redirect(url_for('main.add_student', id=account.id))
     else:
         print("not valid")
     return render_template('add_account.html', title='Sign Up', form=form)
@@ -253,21 +282,48 @@ def edit_account(id):
     account_in_db = Accounts.query.filter_by(id=id).first_or_404()
     form = AddAccountForm()
     if form.validate_on_submit():
+        # make sure email2 is not stored as an empty string
+        if form.email2.data is "":
+            email2 = None
+        else:
+            email2 = form.email2.data
+        
+        # check to see if account exists
+        check_email1 = Accounts.query.filter(
+            or_(
+                Accounts.email1 == form.email1.data,
+                Accounts.email2 == form.email1.data)).first()
+        # seperated into 2 queries so I can be specific with error message.
+        check_email2 = Accounts.query.filter(
+            or_(
+                Accounts.email1 == form.email2.data,
+                Accounts.email2 == form.email2.data)).first()
 
-        account_in_db.f_name1 = form.f_name1.data
-        account_in_db.l_name1 = form.l_name1.data
-        account_in_db.cell_phone1 = form.cell_phone1.data
-        account_in_db.email1 = form.email1.data
-        account_in_db.home_phone1 = form.home_phone1.data
-        account_in_db.f_name2 = form.f_name2.data
-        account_in_db.l_name2 = form.l_name2.data
-        account_in_db.cell_phone2 = form.cell_phone2.data
-        account_in_db.email2 = form.email2.data
-        account_in_db.home_phone2 = form.home_phone2.data
-        db.session.commit()
+        # check to see if email is in db already
+        if check_email1 is not None and check_email1.id is not int(id):
+            flash('An account with the primary email \
+                address already exists.')
+            return redirect(url_for('main.edit_account', id=id))
+        elif check_email2 is not None and check_email2.id is not int(id):
+            flash('An account with the secondary email \
+                address already exists.')
+            return redirect(url_for('main.edit_account', id=id))
+        else:
 
-        flash('Your changes have been saved.')
-        return redirect(url_for('main.view_account', id=id))
+            account_in_db.f_name1 = form.f_name1.data
+            account_in_db.l_name1 = form.l_name1.data
+            account_in_db.cell_phone1 = form.cell_phone1.data
+            account_in_db.email1 = form.email1.data
+            account_in_db.home_phone1 = form.home_phone1.data
+            account_in_db.f_name2 = form.f_name2.data
+            account_in_db.l_name2 = form.l_name2.data
+            account_in_db.cell_phone2 = form.cell_phone2.data
+            account_in_db.email2 = email2
+            account_in_db.home_phone2 = form.home_phone2.data
+            db.session.commit()
+
+            flash('Your changes have been saved.')
+            return redirect(url_for('main.view_account', id=id))
 
     elif request.method == 'GET':
 

@@ -4,10 +4,13 @@
 {% block app_content %}
     <br>
     <table class="table table-hover admin-table">
-        <tr>
         {% for teacher in teachers %}
+        <tr>
             <td style="width:50px;">
                 <div>
+                    <img class="avatar" src="{{ teacher.avatar(50) }}">
+                </div>
+                <div class="teacher-text">
                     <p>
                         <h3>{{ teacher }}</h3>
                         {% if teacher.is_admin %}
@@ -23,16 +26,14 @@
                         {{ teacher.city }}, {{ teacher.state }},
                         {{ teacher.zipcode }}
                     </p>
-                </div>
-                <div>
+                    <br>
                     <h3>Notes:</h3>
                     <p>{{ teacher.notes }}</p>
                 <div>
             </td>
-        {% endfor %}
         </tr>
+        {% if current_user.is_admin %}
         <tr>
-        {% for teacher in teachers %}
             <td>
                 <div class="admin-controls">
                     <a href="{{ url_for('main.edit_teacher', id=teacher.id) }}">Edit</a>
@@ -40,30 +41,49 @@
                     <a href="#" data-toggle="modal" data-target="#delete-{{teacher.id}}">Delete</a>
                 </div>
             </td>
-        {% endfor %}
         </tr>
+        {% endif %}
+    {% endfor %}
     </table>
-{% for teacher in teachers %}
-<div class="modal fade" id="delete-{{ teacher.id }}">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1>Are you sure you want to delete this teacher?</h1>
-            </div>
-            <div class="modal-body modal-xl">
-                <div class="row">
-                    <div class="col-md-4">
-                        <h3>{{ teacher }}</h3>
+    {% for teacher in teachers %}
+    <div class="modal fade" id="delete-{{ teacher.id }}">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1>Are you sure you want to delete this teacher?</h1>
+                </div>
+                <div class="modal-body modal-xl">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div>
+                                <img class="avatar" src="{{ teacher.avatar(50) }}">
+                            </div>
+                            <div class="teacher-text">
+                                <p>
+                                    <h3>{{ teacher }}</h3>
+                                    {% if teacher.is_admin %}
+                                        <p class="success"><b>Administrator</b></p>
+                                    {% endif %}
+                                    {{ teacher.email }}
+                                    <br>{# teacher.phone_num #}
+                                    508-951-2022
+                                </p>
+                                <p>
+                                    {{ teacher.address }},
+                                    <br>
+                                    {{ teacher.city }}, {{ teacher.state }},
+                                    {{ teacher.zipcode }}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
-                <a href="{{ url_for('main.delete_teacher', id=teacher.id) }}" class="btn btn-danger" value="delete">Delete</a>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
+                    <a href="{{ url_for('main.delete_teacher', id=teacher.id) }}" class="btn btn-danger" value="delete">Delete</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endfor %}
-
 {% endblock %}
