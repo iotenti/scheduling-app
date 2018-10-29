@@ -166,17 +166,6 @@ def add_instrument():
                             form=form)
 
 
-@bp.route('/view_account/<id>', methods=['GET', 'POST'])
-@login_required
-def view_account(id):
-    account = Accounts.query.filter_by(id=id).first_or_404()
-
-    return render_template(
-                            'view_account.html',
-                            title='Account',
-                            account=account)
-
-
 @bp.route('/view_all_teachers', methods=['GET', 'POST'])
 @login_required
 def view_all_teachers():
@@ -276,18 +265,30 @@ def view_student(id):
                             student=student)
 
 
+@bp.route('/view_account/<id>', methods=['GET', 'POST'])
+@login_required
+def view_account(id):
+    account = Accounts.query.filter_by(id=id).first_or_404()
+
+    return render_template(
+                            'view_account.html',
+                            title='Account',
+                            account=account)
+
+
 @bp.route('/edit_account/<id>', methods=['GET', 'POST'])
 @login_required
 def edit_account(id):
     account_in_db = Accounts.query.filter_by(id=id).first_or_404()
     form = AddAccountForm()
+    print('here')
     if form.validate_on_submit():
         # make sure email2 is not stored as an empty string
         if form.email2.data is "":
             email2 = None
         else:
             email2 = form.email2.data
-        
+
         # check to see if account exists
         check_email1 = Accounts.query.filter(
             or_(
@@ -324,9 +325,10 @@ def edit_account(id):
 
             flash('Your changes have been saved.')
             return redirect(url_for('main.view_account', id=id))
+        print('not valid')
 
     elif request.method == 'GET':
-
+        print('here')
         form.f_name1.data = account_in_db.f_name1
         form.l_name1.data = account_in_db.l_name1
         form.cell_phone1.data = account_in_db.cell_phone1
@@ -344,7 +346,7 @@ def edit_account(id):
                             account_in_db=account_in_db)
 
 
-@bp.route('/delete_account/<id>', methods=['GET', 'POST'])
+@bp.route('/account/<id>', methods=['GET', 'POST'])
 @login_required
 def delete_account(id):
     # figure out how to cascade attendence too
