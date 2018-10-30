@@ -1,10 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, ValidationError
 from wtforms.validators import DataRequired, Email, Optional
-from app.models import Teachers, Instruments
+from app.models import Teachers, Instruments, Accounts
 from wtforms_alchemy import QuerySelectField
+from sqlalchemy import or_
 import phonenumbers
-from flask import g
 
 
 class AddAccountForm(FlaskForm):
@@ -20,6 +20,37 @@ class AddAccountForm(FlaskForm):
     home_phone2 = StringField('Home Phone', validators=[Optional()])
     submit = SubmitField('submit')
 
+    def __init__(self, original_email1, original_email2, *args, **kwargs):
+        super(AddAccountForm, self).__init__(*args, **kwargs)
+        self.original_email1 = original_email1
+        self.original_email2 = original_email2
+
+    def validate_email1(self, original_email1):
+        # check to see if account exists
+        check_email = Accounts.query.filter(
+            or_(
+                Accounts.email1 == self.original_email1,
+                Accounts.email2 == self.original_email1)).first()
+        print(check_email.email2)
+        if (check_email is not None
+                and check_email.email1 != self.original_email1
+                or self.email1.data == check_email.email2):
+            raise ValidationError('An account with the secondary email \
+                address already exists.')
+
+    def validate_email2(self, original_email2):
+        # check to see if account exists
+        check_email = Accounts.query.filter(
+            or_(
+                Accounts.email1 == self.original_email2,
+                Accounts.email2 == self.original_email2)).first()
+
+        if (check_email is not None
+                and check_email.email2 != self.original_email2
+                or self.email2.data == check_email.email1):
+            raise ValidationError('An account with the secondary email \
+                address already exists.')
+
     def validate_cell_phone1(form, field):
         if field.data is "":
             pass
@@ -29,7 +60,7 @@ class AddAccountForm(FlaskForm):
             input_number = phonenumbers.parse(field.data)
             if not (phonenumbers.is_valid_number(input_number)):
                 raise ValidationError('Invalid phone number.')
-        except:  # noqa: E722
+        except:
             input_number = phonenumbers.parse("+1" + field.data)
             if not (phonenumbers.is_valid_number(input_number)):
                 raise ValidationError('Invalid phone number.')

@@ -92,7 +92,7 @@ def sign_up():
         else:
             account = Accounts(
                 f_name1=form.f_name1.data.capitalize(),
-                l_name1=form.l_name2.data.capitalize(),
+                l_name1=form.l_name1.data.capitalize(),
                 cell_phone1=form.cell_phone1.data,
                 email1=form.email1.data,
                 home_phone1=form.home_phone1.data,
@@ -247,62 +247,24 @@ def delete_teacher(id):
 def edit_account(id):
     account = Accounts.query.filter_by(id=id).first_or_404()
     h1 = 'Edit Account'
-    form = AddAccountForm()
+    form = AddAccountForm(account.email1, account.email2)
     if form.validate_on_submit():
-        # make sure email2 is not stored as an empty string
-        if form.email2.data is "":
-            email2 = None
-        else:
-            email2 = form.email2.data
 
-        # check to see if account exists
-        check_email1 = Accounts.query.filter(
-            or_(
-                Accounts.email1 == form.email1.data,
-                Accounts.email2 == form.email1.data)).first()
-        # seperated into 2 queries so I can be specific with error message.
-        check_email2 = Accounts.query.filter(
-            or_(
-                Accounts.email1 == form.email2.data,
-                Accounts.email2 == form.email2.data)).first()
+        account.f_name1 = form.f_name1.data.capitalize()
+        account.l_name1 = form.l_name1.data.capitalize()
+        account.cell_phone1 = form.cell_phone1.data
+        account.email1 = form.email1.data
+        account.home_phone1 = form.home_phone1.data
+        account.f_name2 = form.f_name2.data.capitalize()
+        account.l_name2 = form.l_name2.data.capitalize()
+        account.cell_phone2 = form.cell_phone2.data
+        account.email2 = form.email2.data
+        account.home_phone2 = form.home_phone2.data
 
-        # check to see if email is in db already
-        if check_email1 is not None and check_email1.id is not int(id):
-            flash('An account with the primary email \
-                address already exists.')
-            return redirect(url_for('main.edit_account', id=id))
+        db.session.commit()
 
-        elif check_email2 is not None and check_email2.id is not int(id):
-            flash('An account with the secondary email \
-                address already exists.')
-            return redirect(url_for('main.edit_account', id=id))
-
-        # check if phone number has been entered
-        elif (form.cell_phone1.data is ""
-                and form.cell_phone2.data is ""
-                and form.home_phone1.data is ""
-                and form.home_phone2.data is ""):
-
-                flash('Please add a phone number.')
-                return redirect(url_for('main.edit_account', id=id))
-
-        else:
-
-            account.f_name1 = form.f_name1.data.capitalize()
-            account.l_name1 = form.l_name1.data.capitalize()
-            account.cell_phone1 = form.cell_phone1.data
-            account.email1 = form.email1.data
-            account.home_phone1 = form.home_phone1.data
-            account.f_name2 = form.f_name2.data.capitalize()
-            account.l_name2 = form.l_name2.data.capitalize()
-            account.cell_phone2 = form.cell_phone2.data
-            account.email2 = email2
-            account.home_phone2 = form.home_phone2.data
-            db.session.commit()
-
-            flash('Your changes have been saved.')
-            return redirect(url_for('main.view_account', id=id))
-        print('not valid')
+        flash('Your changes have been saved.')
+        return redirect(url_for('main.view_account', id=id))
 
     elif request.method == 'GET':
         form.f_name1.data = account.f_name1
@@ -363,18 +325,20 @@ def edit_student(id):
 @login_required
 def edit_teacher(id):
     teacher = Teachers.query.filter_by(id=id).first_or_404()
-    form = EditTeacherForm()
+    form = EditTeacherForm(teacher.email, teacher.username)
     if form.validate_on_submit():
 
-        teacher.first_name = form.first_name.data
-        teacher.last_name = form.last_name.data
+        teacher.first_name = form.first_name.data.capitalize()
+        teacher.last_name = form.last_name.data.capitalize()
         teacher.phone_num = form.phone_num.data
+        teacher.email = form.email.data
         teacher.address = form.address.data
-        teacher.city = form.city.data
+        teacher.city = form.city.data.capitalize()
         teacher.state = form.state.data
         teacher.zipcode = form.zipcode.data
         teacher.is_admin = form.is_admin.data
         teacher.notes = form.notes.data
+        teacher.username = form.username.data
 
         db.session.commit()
         print('valid')
@@ -386,12 +350,14 @@ def edit_teacher(id):
         form.first_name.data = teacher.first_name
         form.last_name.data = teacher.last_name
         form.phone_num.data = teacher.phone_num
+        form.email.data = teacher.email
         form.address.data = teacher.address
         form.city.data = teacher.city
         form.state.data = teacher.state
         form.zipcode.data = teacher.zipcode
         form.is_admin.data = teacher.is_admin
         form.notes.data = teacher.notes
+        form.username.data = teacher.username
 
     print('not valid')
     return render_template(
