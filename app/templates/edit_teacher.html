@@ -36,13 +36,14 @@
             <div class="col-md-4">
                 <div class="form-group">
                     {{ form.phone_num.label }}
+                    {# form.phone_num(class_='form-control') #}
                     <input type="text"
                            class="form-control"
                            id="phone_num"
                            name="phone_num"
-                           placeholder="Phone Number"
                            required pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
                            title="Please enter a valid 10 digit phone number ex: (123)123-1234"
+                           value="{{ form.phone_num.data }}"
                     >
                     {% for error in form.phone_num.errors %}
                         <span style="color: red;">{{ error }}</span>

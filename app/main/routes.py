@@ -325,7 +325,7 @@ def edit_student(id):
 @login_required
 def edit_teacher(id):
     teacher = Teachers.query.filter_by(id=id).first_or_404()
-    form = EditTeacherForm(teacher.email, teacher.username)
+    form = EditTeacherForm(teacher.email, teacher.username, teacher.phone_num)
     if form.validate_on_submit():
 
         teacher.first_name = form.first_name.data.capitalize()
@@ -349,7 +349,7 @@ def edit_teacher(id):
         print('here')
         form.first_name.data = teacher.first_name
         form.last_name.data = teacher.last_name
-        form.phone_num.data = teacher.phone_num
+        # form.phone_num.data = teacher.phone_num
         form.email.data = teacher.email
         form.address.data = teacher.address
         form.city.data = teacher.city

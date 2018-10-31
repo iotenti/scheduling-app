@@ -61,7 +61,9 @@ class EditTeacherForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
-    phone_num = StringField('Phone Number', validators=[DataRequired()])
+    phone_num = StringField('Phone Number', validators=[
+        DataRequired(),
+        Regexp('\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4}', 0, 'Please enter a valid 10 digit phone number ex: (123)123-1234')])
     email = StringField('Email', validators=[DataRequired(), Email()])
     address = StringField('Address', validators=[DataRequired()])
     city = StringField('City', validators=[DataRequired()])
@@ -71,10 +73,11 @@ class EditTeacherForm(FlaskForm):
     notes = TextAreaField('Notes', validators=[DataRequired()])
     submit = SubmitField('Add Teacher')
 
-    def __init__(self, original_email, original_username, *args, **kwargs):
+    def __init__(self, original_email, original_username, original_phone_num, *args, **kwargs):
         super(EditTeacherForm, self).__init__(*args, **kwargs)
         self.original_email = original_email
         self.original_username = original_username
+        self.phone_num.data = original_phone_num
 
     def validate_phone_num(form, field):
         if field.data is "":
