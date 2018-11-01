@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask import request
 from wtforms import StringField, PasswordField, \
     BooleanField, SubmitField, TextAreaField
 from wtforms.validators import ValidationError, \
@@ -62,8 +63,7 @@ class EditTeacherForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
     phone_num = StringField('Phone Number', validators=[
-        DataRequired(),
-        Regexp('\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4}', 0, 'Please enter a valid 10 digit phone number ex: (123)123-1234')])
+        DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     address = StringField('Address', validators=[DataRequired()])
     city = StringField('City', validators=[DataRequired()])
@@ -77,7 +77,11 @@ class EditTeacherForm(FlaskForm):
         super(EditTeacherForm, self).__init__(*args, **kwargs)
         self.original_email = original_email
         self.original_username = original_username
-        self.phone_num.data = original_phone_num
+        # So <input> can be used in html for better messaging
+        if request.method == 'GET':
+            self.phone_num.data = original_phone_num
+        if request.method == 'POST':
+            self.phone_num.data = self.phone_num.data
 
     def validate_phone_num(form, field):
         if field.data is "":
