@@ -3,7 +3,7 @@ from flask import request
 from wtforms import StringField, PasswordField, \
     BooleanField, SubmitField, TextAreaField
 from wtforms.validators import ValidationError, \
-    DataRequired, Email, EqualTo, Regexp
+    DataRequired, Email, EqualTo
 from app.models import Teachers
 import phonenumbers
 
@@ -73,7 +73,13 @@ class EditTeacherForm(FlaskForm):
     notes = TextAreaField('Notes', validators=[DataRequired()])
     submit = SubmitField('Add Teacher')
 
-    def __init__(self, original_email, original_username, original_phone_num, *args, **kwargs):
+    def __init__(
+            self,
+            original_email,
+            original_username,
+            original_phone_num,
+            *args,
+            **kwargs):
         super(EditTeacherForm, self).__init__(*args, **kwargs)
         self.original_email = original_email
         self.original_username = original_username

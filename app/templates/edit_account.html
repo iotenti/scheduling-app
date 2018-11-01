@@ -26,7 +26,13 @@
             </div>
             <div class="form-group">
                 {{ form.cell_phone1.label }}
-                {{ form.cell_phone1(class_='form-control') }}
+                <input type="text"
+                           class="form-control"
+                           id="cell_phone1"
+                           name="cell_phone1"
+                           pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
+                           title="Please enter a valid 10 digit phone number ex: (123)123-1234"
+                           value="{{ form.cell_phone1.data }}">
                 {% for error in form.cell_phone1.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
@@ -40,7 +46,13 @@
                 </div>
             <div class="form-group">
                 {{ form.home_phone1.label }}
-                {{ form.home_phone1(class_='form-control') }}
+                <input type="text"
+                           class="form-control"
+                           id="home_phone1"
+                           name="home_phone1"
+                           pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
+                           title="Please enter a valid 10 digit phone number ex: (123)123-1234"
+                           value="{{ form.home_phone1.data }}">
                 {% for error in form.home_phone1.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
@@ -64,7 +76,13 @@
             </div>
             <div class="form-group">
                 {{ form.cell_phone2.label }}
-                {{ form.cell_phone2(class_='form-control') }}
+                <input type="text"
+                           class="form-control"
+                           id="cell_phone2"
+                           name="cell_phone2"
+                           pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
+                           title="Please enter a valid 10 digit phone number ex: (123)123-1234"
+                           value="{{ form.cell_phone2.data }}">
                 {% for error in form.cell_phone2.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
@@ -78,7 +96,13 @@
             </div>
             <div class="form-group">
                 {{ form.home_phone2.label }}
-                {{ form.home_phone2(class_='form-control') }}
+                <input type="text"
+                           class="form-control"
+                           id="home_phone2"
+                           name="home_phone2"
+                           pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
+                           title="Please enter a valid 10 digit phone number ex: (123)123-1234"
+                           value="{{ form.home_phone2.data }}">
                 {% for error in form.home_phone2.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}

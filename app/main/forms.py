@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask import flash
 from wtforms import StringField, SubmitField, TextAreaField, ValidationError
 from wtforms.validators import DataRequired, Email, Optional
 from app.models import Teachers, Instruments, Accounts
@@ -20,36 +21,64 @@ class AddAccountForm(FlaskForm):
     home_phone2 = StringField('Home Phone', validators=[Optional()])
     submit = SubmitField('submit')
 
-    def __init__(self, original_email1, original_email2, *args, **kwargs):
+    def __init__(self,
+                 original_email1,
+                 original_email2,
+                 edit,
+                 *args,
+                 **kwargs):
         super(AddAccountForm, self).__init__(*args, **kwargs)
-        self.original_email1 = original_email1
-        self.original_email2 = original_email2
+        if edit:
+            self.original_email1 = original_email1
+            self.original_email2 = original_email2
+            self.edit = True
+        else:
+            self.edit = False
 
     def validate_email1(self, original_email1):
-        # check to see if account exists
-        check_email = Accounts.query.filter(
-            or_(
-                Accounts.email1 == self.original_email1,
-                Accounts.email2 == self.original_email1)).first()
-        print(check_email.email2)
-        if (check_email is not None
-                and check_email.email1 != self.original_email1
-                or self.email1.data == check_email.email2):
-            raise ValidationError('An account with the secondary email \
-                address already exists.')
+        # if editting
+        if self.edit:
+            # check both email rows against provided email
+            check_email = Accounts.query.filter(
+                or_(
+                    Accounts.email1 == self.email1.data,
+                    Accounts.email2 == self.email1.data)).first()
+            # if email is taken, but not by this account
+            if (check_email is not None
+                    and check_email.email1 != self.original_email1):
+                raise ValidationError('An account with the this email \
+                    address already exists.')
+        # if inserting
+        elif self.edit is False:
+            # check to see if account exists
+            check_email = Accounts.query.filter(
+                or_(
+                    Accounts.email1 == self.email1.data,
+                    Accounts.email2 == self.email1.data)).first()
+            # if so raise error
+            if check_email is not None:
+                raise ValidationError('An account with the this email \
+                    address already exists.')
 
     def validate_email2(self, original_email2):
         # check to see if account exists
-        check_email = Accounts.query.filter(
-            or_(
-                Accounts.email1 == self.original_email2,
-                Accounts.email2 == self.original_email2)).first()
-
-        if (check_email is not None
-                and check_email.email2 != self.original_email2
-                or self.email2.data == check_email.email1):
-            raise ValidationError('An account with the secondary email \
-                address already exists.')
+        if self.edit:
+            check_email = Accounts.query.filter(
+                or_(
+                    Accounts.email1 == self.email2.data,
+                    Accounts.email2 == self.email2.data)).first()
+            if (check_email is not None
+                    and check_email.email2 != self.original_email2):
+                raise ValidationError('An account with the this email \
+                    address already exists.')
+        elif self.edit is False:
+            check_email = Accounts.query.filter(
+                or_(
+                    Accounts.email1 == self.email2.data,
+                    Accounts.email2 == self.email2.data)).first()
+            if check_email is not None:
+                raise ValidationError('An account with the this email \
+                    address already exists.')
 
     def validate_cell_phone1(form, field):
         if field.data is "":
@@ -60,7 +89,7 @@ class AddAccountForm(FlaskForm):
             input_number = phonenumbers.parse(field.data)
             if not (phonenumbers.is_valid_number(input_number)):
                 raise ValidationError('Invalid phone number.')
-        except:
+        except:  # noqa: E722
             input_number = phonenumbers.parse("+1" + field.data)
             if not (phonenumbers.is_valid_number(input_number)):
                 raise ValidationError('Invalid phone number.')

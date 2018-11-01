@@ -48,64 +48,32 @@ def index():
 @login_required
 def sign_up():
     h1 = 'Sign Up!'
-    form = AddAccountForm()
+    original_email1 = ""
+    original_email2 = ""
+    edit = False
+    form = AddAccountForm(original_email1, original_email2, edit)
+
+    # do not allow phone numbers to be blank
+
     # if form validates
     if form.validate_on_submit():
-        # email and phone validator
+        account = Accounts(
+            f_name1=form.f_name1.data.capitalize(),
+            l_name1=form.l_name1.data.capitalize(),
+            cell_phone1=form.cell_phone1.data,
+            email1=form.email1.data,
+            home_phone1=form.home_phone1.data,
+            f_name2=form.f_name2.data.capitalize(),
+            l_name2=form.l_name2.data.capitalize(),
+            cell_phone2=form.cell_phone2.data,
+            email2=form.email2.data,
+            home_phone2=form.home_phone2.data
+        )
+        db.session.add(account)
+        db.session.commit()
+        flash('Account added!')
 
-        # if email2 is blank string insert None
-        if form.email2.data is "":
-            email2 = None
-        else:
-            email2 = form.email2.data
-
-        # check to see if account exists
-        check_email1 = Accounts.query.filter(
-            or_(
-                Accounts.email1 == form.email1.data,
-                Accounts.email2 == form.email1.data)).first()
-        # seperated into 2 queries so I can be specific with error message.
-        check_email2 = Accounts.query.filter(
-            or_(
-                Accounts.email1 == form.email2.data,
-                Accounts.email2 == form.email2.data)).first()
-
-        # check to see if email1 is in db already
-        if check_email1 is not None:
-            flash('An account with the primary email \
-                address already exists.')
-            return redirect(url_for('main.sign_up'))
-        # check if email2 is in db
-        elif check_email2 is not None:
-            flash('An account with the secondary email \
-                address already exists.')
-            return redirect(url_for('main.sign_up'))
-        # check if phone number has been entered
-        elif (form.cell_phone1.data is ""
-                and form.cell_phone2.data is ""
-                and form.home_phone1.data is ""
-                and form.home_phone2.data is ""):
-
-                flash('Please add a phone number.')
-                return redirect(url_for('main.sign_up'))
-        # validation complete, add record
-        else:
-            account = Accounts(
-                f_name1=form.f_name1.data.capitalize(),
-                l_name1=form.l_name1.data.capitalize(),
-                cell_phone1=form.cell_phone1.data,
-                email1=form.email1.data,
-                home_phone1=form.home_phone1.data,
-                f_name2=form.f_name2.data.capitalize(),
-                l_name2=form.l_name2.data.capitalize(),
-                cell_phone2=form.cell_phone2.data,
-                email2=email2,
-                home_phone2=form.home_phone2.data
-            )
-            db.session.add(account)
-            db.session.commit()
-            flash('Account added!')
-            return redirect(url_for('main.add_student', id=account.id))
+        return redirect(url_for('main.add_student', id=account.id))
 
     return render_template(
                             'add_account.html',
@@ -247,8 +215,11 @@ def delete_teacher(id):
 def edit_account(id):
     account = Accounts.query.filter_by(id=id).first_or_404()
     h1 = 'Edit Account'
-    form = AddAccountForm(account.email1, account.email2)
+    edit = True
+    form = AddAccountForm(account.email1, account.email2, edit)
     if form.validate_on_submit():
+
+        # do not allow phone numbers to be blank
 
         account.f_name1 = form.f_name1.data.capitalize()
         account.l_name1 = form.l_name1.data.capitalize()
@@ -349,7 +320,6 @@ def edit_teacher(id):
         print('here')
         form.first_name.data = teacher.first_name
         form.last_name.data = teacher.last_name
-        # form.phone_num.data = teacher.phone_num
         form.email.data = teacher.email
         form.address.data = teacher.address
         form.city.data = teacher.city

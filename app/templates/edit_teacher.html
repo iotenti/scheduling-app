@@ -43,8 +43,7 @@
                            name="phone_num"
                            required pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
                            title="Please enter a valid 10 digit phone number ex: (123)123-1234"
-                           value="{{ form.phone_num.data }}"
-                    >
+                           value="{{ form.phone_num.data }}">
                     {% for error in form.phone_num.errors %}
                         <span style="color: red;">{{ error }}</span>
                     {% endfor %}
