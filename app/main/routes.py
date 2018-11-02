@@ -4,10 +4,10 @@ from datetime import datetime
 from dateutil import tz
 from time import strftime
 from app import db
-from app.models import Teachers, Accounts, Students, Instruments, Attendence
+from app.models import Teachers, Accounts, Students, Instruments, Attendance
 from app.main import bp
 from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm, \
-    AttendenceForm
+    AttendanceForm
 from app.auth.forms import EditTeacherForm
 from sqlalchemy import or_
 
@@ -27,7 +27,7 @@ def before_request():
 @bp.route('/index')
 @login_required
 def index():
-    attendence = Attendence.query.all()
+    attendance = Attendance.query.all()
     instruments = Instruments.query.all()
     students = Students.query.all()
     accounts = Accounts.query.all()
@@ -39,7 +39,7 @@ def index():
                             user=user,
                             students=students,
                             accounts=accounts,
-                            attendence=attendence,
+                            attendance=attendance,
                             instruments=instruments)
 
 
@@ -48,26 +48,26 @@ def index():
 @login_required
 def sign_up():
     h1 = 'Sign Up!'
-    original_email1 = ""
-    original_email2 = ""
+    original_primary_email = ""
+    original_secondary_email = ""
     edit = False
-    form = AddAccountForm(original_email1, original_email2, edit)
+    form = AddAccountForm(original_primary_email, original_secondary_email, edit)
 
     # do not allow phone numbers to be blank
 
     # if form validates
     if form.validate_on_submit():
         account = Accounts(
-            f_name1=form.f_name1.data.capitalize(),
-            l_name1=form.l_name1.data.capitalize(),
-            cell_phone1=form.cell_phone1.data,
-            email1=form.email1.data,
-            home_phone1=form.home_phone1.data,
-            f_name2=form.f_name2.data.capitalize(),
-            l_name2=form.l_name2.data.capitalize(),
-            cell_phone2=form.cell_phone2.data,
-            email2=form.email2.data,
-            home_phone2=form.home_phone2.data
+            primary_fname=form.primary_fname.data.capitalize(),
+            primary_lname=form.primary_lname.data.capitalize(),
+            primary_cell_phone=form.primary_cell_phone.data,
+            primary_email=form.primary_email.data,
+            primary_home_phone=form.primary_home_phone.data,
+            secondary_fname=form.secondary_fname.data.capitalize(),
+            secondary_lname=form.secondary_lname.data.capitalize(),
+            secondary_cell_phone=form.secondary_cell_phone.data,
+            secondary_email=form.secondary_email.data,
+            secondary_home_phone=form.secondary_home_phone.data
         )
         db.session.add(account)
         db.session.commit()
@@ -145,14 +145,14 @@ def add_student(id):
 @bp.route('/delete_account/<id>', methods=['GET', 'POST'])
 @login_required
 def delete_account(id):
-    # figure out how to cascade attendence too
+    # figure out how to cascade attendance too
     account = Accounts.query.filter_by(id=id).first_or_404()
 
-    attendence = Attendence. \
+    attendance = Attendance. \
         query.filter_by(account_ID=id).all()
 
-    if attendence:
-        for attended in attendence:
+    if attendance:
+        for attended in attendance:
             db.session.delete(attended)
 
     db.session.delete(account)
@@ -170,14 +170,14 @@ def delete_account(id):
 @bp.route('/delete_student/<id>', methods=['GET', 'POST'])
 @login_required
 def delete_student(id):
-    # figure out how to cascade attendence too
+    # figure out how to cascade attendance too
     student = Students.query.filter_by(id=id).first_or_404()
 
-    attendence = Attendence. \
+    attendance = Attendance. \
         query.filter_by(student_ID=id).all()
 
-    if attendence:
-        for attended in attendence:
+    if attendance:
+        for attended in attendance:
             db.session.delete(attended)
 
     db.session.delete(student)
@@ -195,7 +195,7 @@ def delete_student(id):
 @bp.route('/delete_teacher/<id>', methods=['GET', 'POST'])
 @login_required
 def delete_teacher(id):
-    # figure out how to cascade attendence too
+    # figure out how to cascade attendance too
     teacher = Teachers.query.filter_by(id=id).first_or_404()
 
     db.session.delete(teacher)
@@ -216,21 +216,21 @@ def edit_account(id):
     account = Accounts.query.filter_by(id=id).first_or_404()
     h1 = 'Edit Account'
     edit = True
-    form = AddAccountForm(account.email1, account.email2, edit)
+    form = AddAccountForm(account.primary_email, account.secondary_email, edit)
     if form.validate_on_submit():
 
         # do not allow phone numbers to be blank
 
-        account.f_name1 = form.f_name1.data.capitalize()
-        account.l_name1 = form.l_name1.data.capitalize()
-        account.cell_phone1 = form.cell_phone1.data
-        account.email1 = form.email1.data
-        account.home_phone1 = form.home_phone1.data
-        account.f_name2 = form.f_name2.data.capitalize()
-        account.l_name2 = form.l_name2.data.capitalize()
-        account.cell_phone2 = form.cell_phone2.data
-        account.email2 = form.email2.data
-        account.home_phone2 = form.home_phone2.data
+        account.primary_fname = form.primary_fname.data.capitalize()
+        account.primary_lname = form.primary_lname.data.capitalize()
+        account.primary_cell_phone = form.primary_cell_phone.data
+        account.primary_email = form.primary_email.data
+        account.primary_home_phone = form.primary_home_phone.data
+        account.secondary_fname = form.secondary_fname.data.capitalize()
+        account.secondary_lname = form.secondary_lname.data.capitalize()
+        account.secondary_cell_phone = form.secondary_cell_phone.data
+        account.secondary_email = form.secondary_email.data
+        account.secondary_home_phone = form.secondary_home_phone.data
 
         db.session.commit()
 
@@ -238,16 +238,16 @@ def edit_account(id):
         return redirect(url_for('main.view_account', id=id))
 
     elif request.method == 'GET':
-        form.f_name1.data = account.f_name1
-        form.l_name1.data = account.l_name1
-        form.cell_phone1.data = account.cell_phone1
-        form.email1.data = account.email1
-        form.home_phone1.data = account.home_phone1
-        form.f_name2.data = account.f_name2
-        form.l_name2.data = account.l_name2
-        form.cell_phone2.data = account.cell_phone2
-        form.email2.data = account.email2
-        form.home_phone2.data = account.home_phone2
+        form.primary_fname.data = account.primary_fname
+        form.primary_lname.data = account.primary_lname
+        form.primary_cell_phone.data = account.primary_cell_phone
+        form.primary_email.data = account.primary_email
+        form.primary_home_phone.data = account.primary_home_phone
+        form.secondary_fname.data = account.secondary_fname
+        form.secondary_lname.data = account.secondary_lname
+        form.secondary_cell_phone.data = account.secondary_cell_phone
+        form.secondary_email.data = account.secondary_email
+        form.secondary_home_phone.data = account.secondary_home_phone
 
     return render_template(
                             'edit_account.html',
@@ -372,9 +372,9 @@ def view_student(id):
     today = strftime('%Y-%m-%d')  # 2018-10-19
     # key word arguments for query
     kwargs = {'student_ID': id, 'account_ID': account_ID}
-    # query attendence table with kwargs
-    attendence = Attendence. \
-        query.filter_by(**kwargs).order_by(Attendence.id.desc()).first()
+    # query attendance table with kwargs
+    attendance = Attendance. \
+        query.filter_by(**kwargs).order_by(Attendance.id.desc()).first()
     # convert time zone from UTC to local time
     from_zone = tz.tzutc()
     to_zone = tz.tzlocal()
@@ -383,9 +383,9 @@ def view_student(id):
     # convert time zone to local time zone
     today_my_time = utc.astimezone(to_zone)
     # check to see if student was checked in today
-    if attendence is not None:
+    if attendance is not None:
         # set dates student was present to var 'utc'
-        utc = attendence.was_present
+        utc = attendance.was_present
         # tell datetime object the timezone is utc since object is naive
         utc = utc.replace(tzinfo=from_zone)
         # convert time zone to local time zone
@@ -397,13 +397,13 @@ def view_student(id):
             print(my_time_zone)
             checked_in = True
 
-    check_in_form = AttendenceForm()
-    undo_check_in_form = AttendenceForm()
+    check_in_form = AttendanceForm()
+    undo_check_in_form = AttendanceForm()
 
     if check_in_form.validate_on_submit() and checked_in is False:
         # if not yet checked in template displays this version of the form
         # adds a timestamp to db, checking student in
-        was_present = Attendence(
+        was_present = Attendance(
 
                 student_ID=student.id,
                 account_ID=student.account_ID
@@ -416,9 +416,9 @@ def view_student(id):
 
     # if student is checked in, template dispays this version of the form
     if undo_check_in_form.validate_on_submit() and checked_in is True:
-        # deletes the last record for that student in attendence table
-        delete_record = Attendence. \
-            query.filter_by(**kwargs).order_by(Attendence.id.desc()).first()
+        # deletes the last record for that student in attendance table
+        delete_record = Attendance. \
+            query.filter_by(**kwargs).order_by(Attendance.id.desc()).first()
 
         # undoes the check in for today's date
         db.session.delete(delete_record)
@@ -431,7 +431,7 @@ def view_student(id):
                             check_in_form=check_in_form,
                             undo_check_in_form=undo_check_in_form,
                             checked_in=checked_in,
-                            attendence=attendence,
+                            attendance=attendance,
                             today=today,
                             student=student)
 

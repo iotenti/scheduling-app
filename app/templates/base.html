@@ -66,10 +66,10 @@
                         <div class="dd-container">
                             <table class="table table-hover">
                                 {% for account in g.accounts %}
-                                    {% if account.l_name1[:1].upper() == letter %} 
+                                    {% if account.primary_lname[:1].upper() == letter %} 
                                         <tr><td><dd>
                                             <a href="{{ url_for('main.view_account', id=account.id) }}">
-                                                {{ account.l_name1 }}, {{ account.f_name1 }} 
+                                                {{ account.primary_lname }}, {{ account.primary_fname }} 
                                             </a>
                                         </dd></td></tr>
                                     {% endif %}

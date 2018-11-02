@@ -72,18 +72,18 @@ def load_user(id):
 
 class Accounts(db.Model):  # needs key constrains
     id = db.Column(db.Integer, primary_key=True)
-    f_name1 = db.Column(db.String(50))
-    l_name1 = db.Column(db.String(50))
-    cell_phone1 = db.Column(db.String(10))
-    email1 = db.Column(db.String(120))
-    home_phone1 = db.Column(db.String(10), nullable=True)
-    f_name2 = db.Column(db.String(50), nullable=True)
-    l_name2 = db.Column(db.String(50), nullable=True)
-    cell_phone2 = db.Column(db.String(10), nullable=True)
-    email2 = db.Column(db.String(120), nullable=True)
+    primary_fname = db.Column(db.String(50))
+    primary_lname = db.Column(db.String(50))
+    primary_cell_phone = db.Column(db.String(10))
+    primary_email = db.Column(db.String(120))
+    primary_home_phone = db.Column(db.String(10), nullable=True)
+    secondary_fname = db.Column(db.String(50), nullable=True)
+    secondary_lname = db.Column(db.String(50), nullable=True)
+    secondary_cell_phone = db.Column(db.String(10), nullable=True)
+    secondary_email = db.Column(db.String(120), nullable=True)
     account_bal = db.Column(db.Float(10))
     account_credit = db.Column(db.Float(10))
-    home_phone2 = db.Column(db.String(10), nullable=True)
+    secondary_home_phone = db.Column(db.String(10), nullable=True)
     students = db.relationship(
                             'Students',
                             backref='account',
@@ -96,19 +96,19 @@ class Accounts(db.Model):  # needs key constrains
 
     def __repr__(self):
         str = '{} {}'.format(
-            self.f_name1,
-            self.l_name1)
+            self.primary_fname,
+            self.primary_lname)
 
         return str
 
     @classmethod
     def view_all_accounts(cls):
-        accounts = Accounts.query.order_by(Accounts.l_name1).all()
+        accounts = Accounts.query.order_by(Accounts.primary_lname).all()
         return accounts
 
     @classmethod
     def get_account_alphabet(cls, accounts):
-        abc = [account.l_name1[:1].upper() for account in accounts]
+        abc = [account.primary_lname[:1].upper() for account in accounts]
         abc = set(abc)
         abc = sorted(abc)
 
@@ -124,7 +124,7 @@ class Instruments(db.Model):
         return '{}'.format(self.instrument)
 
 
-class Attendence(db.Model):
+class Attendance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_ID = db.Column(db.Integer, db.ForeignKey('students.id'))
     account_ID = db.Column(db.Integer, db.ForeignKey('accounts.id'))

@@ -9,43 +9,43 @@ import phonenumbers
 
 
 class AddAccountForm(FlaskForm):
-    f_name1 = StringField('First Name', validators=[DataRequired()])
-    l_name1 = StringField('Last Name', validators=[DataRequired()])
-    cell_phone1 = StringField('Cell', validators=[Optional()])
-    email1 = StringField('Email', validators=[DataRequired(), Email()])
-    home_phone1 = StringField('Home Phone', validators=[Optional()])
-    f_name2 = StringField('First Name')
-    l_name2 = StringField('Last Name')
-    cell_phone2 = StringField('Cell', validators=[Optional()])
-    email2 = StringField('Email', validators=[Optional(), Email()])
-    home_phone2 = StringField('Home Phone', validators=[Optional()])
+    primary_fname = StringField('First Name', validators=[DataRequired()])
+    primary_lname = StringField('Last Name', validators=[DataRequired()])
+    primary_cell_phone = StringField('Cell', validators=[Optional()])
+    primary_email = StringField('Email', validators=[DataRequired(), Email()])
+    primary_home_phone = StringField('Home Phone', validators=[Optional()])
+    secondary_fname = StringField('First Name')
+    secondary_lname = StringField('Last Name')
+    secondary_cell_phone = StringField('Cell', validators=[Optional()])
+    secondary_email = StringField('Email', validators=[Optional(), Email()])
+    secondary_home_phone = StringField('Home Phone', validators=[Optional()])
     submit = SubmitField('submit')
 
     def __init__(self,
-                 original_email1,
-                 original_email2,
+                 original_primary_email,
+                 original_secondary_email,
                  edit,
                  *args,
                  **kwargs):
         super(AddAccountForm, self).__init__(*args, **kwargs)
         if edit:
-            self.original_email1 = original_email1
-            self.original_email2 = original_email2
+            self.original_primary_email = original_primary_email
+            self.original_secondary_email = original_secondary_email
             self.edit = True
         else:
             self.edit = False
 
-    def validate_email1(self, original_email1):
+    def validate_primary_email(self, original_primary_email):
         # if editting
         if self.edit:
             # check both email rows against provided email
             check_email = Accounts.query.filter(
                 or_(
-                    Accounts.email1 == self.email1.data,
-                    Accounts.email2 == self.email1.data)).first()
+                    Accounts.primary_email == self.primary_email.data,
+                    Accounts.secondary_email == self.primary_email.data)).first()
             # if email is taken, but not by this account
             if (check_email is not None
-                    and check_email.email1 != self.original_email1):
+                    and check_email.primary_email != self.original_primary_email):
                 raise ValidationError('An account with the this email \
                     address already exists.')
         # if inserting
@@ -53,34 +53,34 @@ class AddAccountForm(FlaskForm):
             # check to see if account exists
             check_email = Accounts.query.filter(
                 or_(
-                    Accounts.email1 == self.email1.data,
-                    Accounts.email2 == self.email1.data)).first()
+                    Accounts.primary_email == self.primary_email.data,
+                    Accounts.secondary_email == self.primary_email.data)).first()
             # if so raise error
             if check_email is not None:
                 raise ValidationError('An account with the this email \
                     address already exists.')
 
-    def validate_email2(self, original_email2):
+    def validate_secondary_email(self, original_secondary_email):
         # check to see if account exists
         if self.edit:
             check_email = Accounts.query.filter(
                 or_(
-                    Accounts.email1 == self.email2.data,
-                    Accounts.email2 == self.email2.data)).first()
+                    Accounts.primary_email == self.secondary_email.data,
+                    Accounts.secondary_email == self.secondary_email.data)).first()
             if (check_email is not None
-                    and check_email.email2 != self.original_email2):
+                    and check_email.secondary_email != self.original_secondary_email):
                 raise ValidationError('An account with the this email \
                     address already exists.')
         elif self.edit is False:
             check_email = Accounts.query.filter(
                 or_(
-                    Accounts.email1 == self.email2.data,
-                    Accounts.email2 == self.email2.data)).first()
+                    Accounts.primary_email == self.secondary_email.data,
+                    Accounts.secondary_email == self.secondary_email.data)).first()
             if check_email is not None:
                 raise ValidationError('An account with the this email \
                     address already exists.')
 
-    def validate_cell_phone1(form, field):
+    def validate_primary_cell_phone(form, field):
         if field.data is "":
             pass
         if len(field.data) > 16:
@@ -94,7 +94,7 @@ class AddAccountForm(FlaskForm):
             if not (phonenumbers.is_valid_number(input_number)):
                 raise ValidationError('Invalid phone number.')
 
-    def validate_cell_phone2(form, field):
+    def validate_secondary_cell_phone(form, field):
         if field.data is "":
             pass
         if len(field.data) > 16:
@@ -108,7 +108,7 @@ class AddAccountForm(FlaskForm):
             if not (phonenumbers.is_valid_number(input_number)):
                 raise ValidationError('Invalid phone number.')
 
-    def validate_home_phone1(form, field):
+    def validate_primary_home_phone(form, field):
         # if blank, pass
         if field.data is "":
             pass
@@ -126,7 +126,7 @@ class AddAccountForm(FlaskForm):
             if not (phonenumbers.is_valid_number(input_number)):
                 raise ValidationError('Invalid phone number.')
 
-    def validate_home_phone2(form, field):
+    def validate_secondary_home_phone(form, field):
         if field.data is "":
             pass
         if len(field.data) > 16:
@@ -179,7 +179,7 @@ class AddInstrumentForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
-class AttendenceForm(FlaskForm):
+class AttendanceForm(FlaskForm):
     check_in = SubmitField('Check In')
     checked_in = SubmitField('Checked In')
 

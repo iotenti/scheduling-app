@@ -5,7 +5,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h1>Account: {{ account.f_name1 }} {{ account.l_name1 }}</h1>
+            <h1>Account: {{ account.primary_fname }} {{ account.primary_lname }}</h1>
         </div>
     </div>
     <br>
@@ -13,20 +13,20 @@
         <tr>
             <td>
                 <h3>Primary Contact:</h3>
-                <p><b>First name:</b> {{ account.f_name1 }}</p>
-                <p><b>Last name:</b> {{ account.l_name1 }}</p>
-                <p><b>Cell phone:</b> {{ account.cell_phone1 }}</p>
-                <p><b>Email:</b> {{ account.email1 }}</p>
-                <p><b>Home phone:</b> {{ account.home_phone1 }}</p>
+                <p><b>First name:</b> {{ account.primary_fname }}</p>
+                <p><b>Last name:</b> {{ account.primary_lname }}</p>
+                <p><b>Cell phone:</b> {{ account.primary_cell_phone }}</p>
+                <p><b>Email:</b> {{ account.primary_email }}</p>
+                <p><b>Home phone:</b> {{ account.primary_home_phone }}</p>
             </td>
-            {% if account.f_name2 and account.l_name2 is not none %}
+            {% if account.secondary_fname and account.secondary_lname is not none %}
             <td>
                 <h3>Secondary Contact:</h3>
-                <p><b>First name:</b> {{ account.f_name2 }}</p>
-                <p><b>Last name:</b> {{ account.l_name2 }}</p>
-                <p><b>Cell phone:</b> {{ account.cell_phone2 }}</p>
-                <p><b>Email:</b> {{ account.email2 }}</p>
-                <p><b>Home phone:</b> {{ account.home_phone2 }}</p>
+                <p><b>First name:</b> {{ account.secondary_fname }}</p>
+                <p><b>Last name:</b> {{ account.secondary_lname }}</p>
+                <p><b>Cell phone:</b> {{ account.secondary_cell_phone }}</p>
+                <p><b>Email:</b> {{ account.secondary_email }}</p>
+                <p><b>Home phone:</b> {{ account.secondary_home_phone }}</p>
             </td>
             {% endif %}
             {% if account.students %}
@@ -71,20 +71,20 @@
                 <div class="row">
                     <div class="col-md-4">
                         <h3>Primary Contact:</h3>
-                        <p><b>First name:</b> {{ account.f_name1 }}</p>
-                        <p><b>Last name:</b> {{ account.l_name1 }}</p>
-                        <p><b>Cell phone:</b> {{ account.cell_phone1 }}</p>
-                        <p><b>Email:</b> {{ account.email1 }}</p>
-                        <p><b>Home phone:</b> {{ account.home_phone1 }}</p>
+                        <p><b>First name:</b> {{ account.primary_fname }}</p>
+                        <p><b>Last name:</b> {{ account.primary_lname }}</p>
+                        <p><b>Cell phone:</b> {{ account.primary_cell_phone }}</p>
+                        <p><b>Email:</b> {{ account.primary_email }}</p>
+                        <p><b>Home phone:</b> {{ account.primary_home_phone }}</p>
                     </div>
-                    {% if account.f_name2 and account.l_name2 is not none %}
+                    {% if account.secondary_fname and account.secondary_lname is not none %}
                     <div class="col-md-4">                       
                         <h3>Secondary Contact:</h3>
-                        <p><b>First name:</b> {{ account.f_name2 }}</p>
-                        <p><b>Last name:</b> {{ account.l_name2 }}</p>
-                        <p><b>Cell phone:</b> {{ account.cell_phone2 }}</p>
-                        <p><b>Email:</b> {{ account.email2 }}</p>
-                        <p><b>Home phone:</b> {{ account.home_phone2 }}</p>
+                        <p><b>First name:</b> {{ account.secondary_fname }}</p>
+                        <p><b>Last name:</b> {{ account.secondary_lname }}</p>
+                        <p><b>Cell phone:</b> {{ account.secondary_cell_phone }}</p>
+                        <p><b>Email:</b> {{ account.secondary_email }}</p>
+                        <p><b>Home phone:</b> {{ account.secondary_home_phone }}</p>
                     </div>
                     {% else %}
                     <div class="col-md-4"></div>

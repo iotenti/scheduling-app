@@ -11,47 +11,47 @@
         <div class="col-md-4">
             <h3>Primary Contact</h3> 
             <div class="form-group">
-                {{ form.f_name1.label }}
-                {{ form.f_name1(class_='form-control') }}
-                {% for error in form.f_name1.errors %}
+                {{ form.primary_fname.label }}
+                {{ form.primary_fname(class_='form-control') }}
+                {% for error in form.primary_fname.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </div>
             <div class="form-group">
-                {{ form.l_name1.label }}
-                {{ form.l_name1(class_='form-control') }}
-                {% for error in form.l_name1.errors %}
+                {{ form.primary_lname.label }}
+                {{ form.primary_lname(class_='form-control') }}
+                {% for error in form.primary_lname.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </div>
             <div class="form-group">
-                {{ form.cell_phone1.label }}
+                {{ form.primary_cell_phone.label }}
                 <input type="text"
                            class="form-control"
-                           id="cell_phone1"
-                           name="cell_phone1"
+                           id="primary_cell_phone"
+                           name="primary_cell_phone"
                            pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
                            title="Please enter a valid 10 digit phone number ex: (123)123-1234">
-                {% for error in form.cell_phone1.errors %}
+                {% for error in form.primary_cell_phone.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
                 </div>
             <div class="form-group">
-                {{ form.email1.label }}
-                {{ form.email1(class_='form-control') }}
-                {% for error in form.email1.errors %}
+                {{ form.primary_email.label }}
+                {{ form.primary_email(class_='form-control') }}
+                {% for error in form.primary_email.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
                 </div>
             <div class="form-group">
-                {{ form.home_phone1.label }}
+                {{ form.primary_home_phone.label }}
                 <input type="text"
                            class="form-control"
-                           id="home_phone1"
-                           name="home_phone1"
+                           id="primary_home_phone"
+                           name="primary_home_phone"
                            pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
                            title="Please enter a valid 10 digit phone number ex: (123)123-1234">
-                {% for error in form.home_phone1.errors %}
+                {% for error in form.primary_home_phone.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </div>
@@ -59,47 +59,47 @@
         <div class="col-md-4">
             <h3>Secondary Contact</h3>
             <div class="form-group">
-                {{ form.f_name2.label }}
-                {{ form.f_name2(class_='form-control') }}
-                {% for error in form.f_name2.errors %}
+                {{ form.secondary_fname.label }}
+                {{ form.secondary_fname(class_='form-control') }}
+                {% for error in form.secondary_fname.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </div>
             <div class="form-group">
-                    {{ form.l_name2.label }}
-                    {{ form.l_name2(class_='form-control') }}
-                    {% for error in form.l_name2.errors %}
+                    {{ form.secondary_lname.label }}
+                    {{ form.secondary_lname(class_='form-control') }}
+                    {% for error in form.secondary_lname.errors %}
                         <span style="color: red;">{{ error }}</span>
                     {% endfor %}
             </div>
             <div class="form-group">
-                {{ form.cell_phone2.label }}
+                {{ form.secondary_cell_phone.label }}
                 <input type="text"
                            class="form-control"
-                           id="cell_phone2"
-                           name="cell_phone2"
+                           id="secondary_cell_phone"
+                           name="secondary_cell_phone"
                            pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
                            title="Please enter a valid 10 digit phone number ex: (123)123-1234">
-                {% for error in form.cell_phone2.errors %}
+                {% for error in form.secondary_cell_phone.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </div>
             <div class="form-group">
-                {{ form.email2.label }}
-                {{ form.email2(class_='form-control') }}
-                {% for error in form.email2.errors %}
+                {{ form.secondary_email.label }}
+                {{ form.secondary_email(class_='form-control') }}
+                {% for error in form.secondary_email.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </div>
             <div class="form-group">
-                {{ form.home_phone2.label }}
+                {{ form.secondary_home_phone.label }}
                 <input type="text"
                            class="form-control"
-                           id="home_phone2"
-                           name="home_phone2"
+                           id="secondary_home_phone"
+                           name="secondary_home_phone"
                            pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
                            title="Please enter a valid 10 digit phone number ex: (123)123-1234">
-                {% for error in form.home_phone2.errors %}
+                {% for error in form.secondary_home_phone.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
             </div>
