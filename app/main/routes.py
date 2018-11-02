@@ -9,7 +9,7 @@ from app.main import bp
 from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm, \
     AttendanceForm
 from app.auth.forms import EditTeacherForm
-from sqlalchemy import or_
+from wtforms import ValidationError
 
 
 @bp.before_app_request
@@ -34,13 +34,14 @@ def index():
     user = current_user
 
     return render_template(
-                            'index.html',
-                            title='Home',
-                            user=user,
-                            students=students,
-                            accounts=accounts,
-                            attendance=attendance,
-                            instruments=instruments)
+        'index.html',
+        title='Home',
+        user=user,
+        students=students,
+        accounts=accounts,
+        attendance=attendance,
+        instruments=instruments
+    )
 
 
 # add account
@@ -51,12 +52,24 @@ def sign_up():
     original_primary_email = ""
     original_secondary_email = ""
     edit = False
-    form = AddAccountForm(original_primary_email, original_secondary_email, edit)
-
-    # do not allow phone numbers to be blank
+    form = AddAccountForm(
+        original_primary_email,
+        original_secondary_email,
+        edit
+    )
 
     # if form validates
     if form.validate_on_submit():
+        # check if at least 1 phone num is given
+        if (form.primary_cell_phone.data == ""
+                and form.primary_home_phone.data == ""
+                and form.secondary_cell_phone.data == ""
+                and form.secondary_home_phone.data == ""):
+            # wish I knew how to repopulate the form
+
+            flash('Please enter a phone number')
+            return redirect(url_for('main.sign_up'))
+
         account = Accounts(
             primary_fname=form.primary_fname.data.capitalize(),
             primary_lname=form.primary_lname.data.capitalize(),
@@ -76,10 +89,11 @@ def sign_up():
         return redirect(url_for('main.add_student', id=account.id))
 
     return render_template(
-                            'add_account.html',
-                            title='Sign Up',
-                            h1=h1,
-                            form=form)
+        'add_account.html',
+        title='Sign Up',
+        h1=h1,
+        form=form
+    )
 
 
 @bp.route('/add_instrument', methods=['GET', 'POST'])
@@ -98,9 +112,10 @@ def add_instrument():
 
         return redirect(url_for('main.add_instrument'))
     return render_template(
-                            'add_instrument.html',
-                            title='Add An Instrument',
-                            form=form)
+        'add_instrument.html',
+        title='Add An Instrument',
+        form=form
+    )
 
 
 @bp.route('/add_student/<id>', methods=['GET', 'POST'])
@@ -135,11 +150,12 @@ def add_student(id):
             print("not valid")
 
     return render_template(
-                            'add_student.html',
-                            title='Add Student',
-                            account=account,
-                            h1=h1,
-                            form=form)
+        'add_student.html',
+        title='Add Student',
+        account=account,
+        h1=h1,
+        form=form
+    )
 
 
 @bp.route('/delete_account/<id>', methods=['GET', 'POST'])
@@ -162,9 +178,10 @@ def delete_account(id):
     return redirect(url_for('main.index'))
 
     return render_template(
-                            'delete_account.html',
-                            account=account,
-                            title='Delete')
+        'delete_account.html',
+        account=account,
+        title='Delete'
+    )
 
 
 @bp.route('/delete_student/<id>', methods=['GET', 'POST'])
@@ -187,9 +204,10 @@ def delete_student(id):
     return redirect(url_for('main.index'))
 
     return render_template(
-                            'delete_student.html',
-                            student=student,
-                            title='Delete')
+        'delete_student.html',
+        student=student,
+        title='Delete'
+    )
 
 
 @bp.route('/delete_teacher/<id>', methods=['GET', 'POST'])
@@ -205,9 +223,10 @@ def delete_teacher(id):
     return redirect(url_for('main.index'))
 
     return render_template(
-                            'delete_teacher.html',
-                            teacher=teacher,
-                            title='Delete')
+        'delete_teacher.html',
+        teacher=teacher,
+        title='Delete'
+    )
 
 
 @bp.route('/edit_account/<id>', methods=['GET', 'POST'])
@@ -220,6 +239,14 @@ def edit_account(id):
     if form.validate_on_submit():
 
         # do not allow phone numbers to be blank
+        if (form.primary_cell_phone.data == ""
+                and form.primary_home_phone.data == ""
+                and form.secondary_cell_phone.data == ""
+                and form.secondary_home_phone.data == ""):
+            # wish I knew how to repopulate the form
+
+            flash('Please enter a phone number')
+            return redirect(url_for('main.edit_account', id=id))
 
         account.primary_fname = form.primary_fname.data.capitalize()
         account.primary_lname = form.primary_lname.data.capitalize()

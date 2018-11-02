@@ -1,11 +1,11 @@
 from flask_wtf import FlaskForm
-from flask import flash
 from wtforms import StringField, SubmitField, TextAreaField, ValidationError
 from wtforms.validators import DataRequired, Email, Optional
 from app.models import Teachers, Instruments, Accounts
 from wtforms_alchemy import QuerySelectField
 from sqlalchemy import or_
 import phonenumbers
+from flask import request
 
 
 class AddAccountForm(FlaskForm):
@@ -21,31 +21,68 @@ class AddAccountForm(FlaskForm):
     secondary_home_phone = StringField('Home Phone', validators=[Optional()])
     submit = SubmitField('submit')
 
-    def __init__(self,
-                 original_primary_email,
-                 original_secondary_email,
-                 edit,
-                 *args,
-                 **kwargs):
+    def __init__(
+                self,
+                original_primary_email,
+                original_secondary_email,
+                edit,
+                *args,
+                **kwargs):
         super(AddAccountForm, self).__init__(*args, **kwargs)
         if edit:
+            self.edit = True
             self.original_primary_email = original_primary_email
             self.original_secondary_email = original_secondary_email
-            self.edit = True
         else:
             self.edit = False
 
+        if request.method == 'GET':
+            if self.primary_cell_phone.data is not None:
+                self.primary_cell_phone.data = self.primary_cell_phone.data
+            else:
+                self.primary_cell_phone.data = ""
+
+            if self.primary_home_phone.data is not None:
+                self.primary_home_phone.data = self.primary_home_phone.data
+            else:
+                self.primary_home_phone.data = ""
+
+            if self.secondary_cell_phone.data is not None:
+                self.secondary_cell_phone.data = self.secondary_cell_phone.data
+            else:
+                self.secondary_cell_phone.data = ""
+
+            if self.secondary_home_phone.data is not None:
+                self.secondary_home_phone.data = self.secondary_home_phone.data
+            else:
+                self.secondary_home_phone.data = ""
+
+        elif request.method == 'POST':
+            if self.primary_cell_phone.data is not None:
+                self.primary_cell_phone.data = self.primary_cell_phone.data
+
+            if self.primary_home_phone.data is not None:
+                self.primary_home_phone.data = self.primary_home_phone.data
+
+            if self.secondary_cell_phone.data is not None:
+                self.secondary_cell_phone.data = self.secondary_cell_phone.data
+                
+            if self.secondary_home_phone.data is not None:
+                self.secondary_home_phone.data = self.secondary_home_phone.data
+
     def validate_primary_email(self, original_primary_email):
-        # if editting
+        # if editing
         if self.edit:
             # check both email rows against provided email
             check_email = Accounts.query.filter(
                 or_(
                     Accounts.primary_email == self.primary_email.data,
-                    Accounts.secondary_email == self.primary_email.data)).first()
+                    Accounts.secondary_email == self.primary_email.data)
+                    ).first()
             # if email is taken, but not by this account
             if (check_email is not None
-                    and check_email.primary_email != self.original_primary_email):
+                    and check_email.primary_email
+                    != self.original_primary_email):
                 raise ValidationError('An account with the this email \
                     address already exists.')
         # if inserting
@@ -54,7 +91,8 @@ class AddAccountForm(FlaskForm):
             check_email = Accounts.query.filter(
                 or_(
                     Accounts.primary_email == self.primary_email.data,
-                    Accounts.secondary_email == self.primary_email.data)).first()
+                    Accounts.secondary_email == self.primary_email.data)
+                    ).first()
             # if so raise error
             if check_email is not None:
                 raise ValidationError('An account with the this email \
@@ -66,16 +104,19 @@ class AddAccountForm(FlaskForm):
             check_email = Accounts.query.filter(
                 or_(
                     Accounts.primary_email == self.secondary_email.data,
-                    Accounts.secondary_email == self.secondary_email.data)).first()
+                    Accounts.secondary_email == self.secondary_email.data)
+                    ).first()
             if (check_email is not None
-                    and check_email.secondary_email != self.original_secondary_email):
+                    and check_email.secondary_email !=
+                    self.original_secondary_email):
                 raise ValidationError('An account with the this email \
                     address already exists.')
         elif self.edit is False:
             check_email = Accounts.query.filter(
                 or_(
                     Accounts.primary_email == self.secondary_email.data,
-                    Accounts.secondary_email == self.secondary_email.data)).first()
+                    Accounts.secondary_email == self.secondary_email.data)
+                    ).first()
             if check_email is not None:
                 raise ValidationError('An account with the this email \
                     address already exists.')

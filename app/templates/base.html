@@ -110,6 +110,7 @@
 
 {% block content %}
     <div class="container">
+        <div id="js-alert"></div>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for message in messages %}
@@ -134,7 +135,20 @@
     var studentsLink = $('#studentsLink')
     var accountsContainer = $("#viewAccounts")
     var studentsContainer = $("#viewStudents")
-   
+
+    //check if account form has a phone number
+    /*$("#account_form").submit(function(){
+        if($("#primary_cell_phone").val() == "" 
+            && $("#primary_home_phone").val() == ""
+            && $("#secondary_cell_phone").val() == ""
+            && $("#secondary_home_phone").val() == ""){
+            //no phone number
+            $("#js-alert").html(
+                '<div class="alert alert-info" role="alert">Please add a phone number</div>'
+            );
+        }
+    });*/
+
     button.click(function(){
         $(".anotherContact").toggleClass("hidden");
          $(".add-contact-headline").toggleClass("hide");

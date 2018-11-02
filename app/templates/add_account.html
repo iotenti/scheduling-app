@@ -5,7 +5,7 @@
     <h1>{{ h1 }}</h1>
     <br>
 
-<form action="{{ url_for('main.sign_up') }}" method="POST" role="form">
+<form action="{{ url_for('main.sign_up') }}" method="POST" role="form" id="account_form">
         {{ form.csrf_token }}
     <div class="row">
         <div class="col-md-4">
@@ -31,7 +31,8 @@
                            id="primary_cell_phone"
                            name="primary_cell_phone"
                            pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
-                           title="Please enter a valid 10 digit phone number ex: (123)123-1234">
+                           title="Please enter a valid 10 digit phone number ex: (123)123-1234"
+                           value="{{ form.primary_cell_phone.data }}">
                 {% for error in form.primary_cell_phone.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
@@ -50,7 +51,8 @@
                            id="primary_home_phone"
                            name="primary_home_phone"
                            pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
-                           title="Please enter a valid 10 digit phone number ex: (123)123-1234">
+                           title="Please enter a valid 10 digit phone number ex: (123)123-1234"
+                           value="{{ form.primary_home_phone.data }}">
                 {% for error in form.primary_home_phone.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
@@ -79,7 +81,8 @@
                            id="secondary_cell_phone"
                            name="secondary_cell_phone"
                            pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
-                           title="Please enter a valid 10 digit phone number ex: (123)123-1234">
+                           title="Please enter a valid 10 digit phone number ex: (123)123-1234"
+                           value="{{ form.secondary_cell_phone.data }}">
                 {% for error in form.secondary_cell_phone.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
@@ -98,7 +101,8 @@
                            id="secondary_home_phone"
                            name="secondary_home_phone"
                            pattern="^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
-                           title="Please enter a valid 10 digit phone number ex: (123)123-1234">
+                           title="Please enter a valid 10 digit phone number ex: (123)123-1234"
+                           value="{{ form.secondary_home_phone.data }}">
                 {% for error in form.secondary_home_phone.errors %}
                     <span style="color: red;">{{ error }}</span>
                 {% endfor %}
