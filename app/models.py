@@ -187,4 +187,5 @@ class Lessons(db.Model):
     is_recurring = db.Column(db.Boolean, default=True, nullable=False)
     created_by = db.Column(db.String(50))
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
-    parent_even_id = db.column(db.Integer, db.foreignKey('lessons.id'))
+    parent_event_id = db.column(db.Integer, db.ForeignKey('lessons.id'))
+
