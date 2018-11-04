@@ -20,7 +20,7 @@
                 {% if checked_in == False %}
                     <form action="{{ url_for('main.view_student', id=student.id) }}" method="POST" role="form">
                         {{ check_in_form.hidden_tag() }}
-                        <h3>attendance:</h3>
+                        <h3>Attendance:</h3>
                         {{ check_in_form.check_in(class_='btn btn-default') }}
                     </form>
                     {% if attendance %}
@@ -31,7 +31,7 @@
                 {% elif checked_in == True %}
                     <form action="{{ url_for('main.view_student', id=student.id) }}" method="POST" role="form">
                         {{ undo_check_in_form.hidden_tag() }}
-                        <h3>attendance:</h3>
+                        <h3>Attendance:</h3>
                         {{ undo_check_in_form.checked_in(class_='btn btn-success') }}
                     </form>
                     <div style="margin-top:5px;">

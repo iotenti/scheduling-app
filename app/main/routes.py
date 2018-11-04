@@ -9,7 +9,6 @@ from app.main import bp
 from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm, \
     AttendanceForm
 from app.auth.forms import EditTeacherForm
-from wtforms import ValidationError
 
 
 @bp.before_app_request
@@ -34,14 +33,13 @@ def index():
     user = current_user
 
     return render_template(
-        'index.html',
-        title='Home',
-        user=user,
-        students=students,
-        accounts=accounts,
-        attendance=attendance,
-        instruments=instruments
-    )
+                            'index.html',
+                            title='Home',
+                            user=user,
+                            students=students,
+                            accounts=accounts,
+                            attendance=attendance,
+                            instruments=instruments)
 
 
 # add account
@@ -55,8 +53,7 @@ def sign_up():
     form = AddAccountForm(
         original_primary_email,
         original_secondary_email,
-        edit
-    )
+        edit)
 
     # if form validates
     if form.validate_on_submit():
@@ -89,11 +86,10 @@ def sign_up():
         return redirect(url_for('main.add_student', id=account.id))
 
     return render_template(
-        'add_account.html',
-        title='Sign Up',
-        h1=h1,
-        form=form
-    )
+                            'add_account.html',
+                            title='Sign Up',
+                            h1=h1,
+                            form=form)
 
 
 @bp.route('/add_instrument', methods=['GET', 'POST'])
@@ -112,10 +108,9 @@ def add_instrument():
 
         return redirect(url_for('main.add_instrument'))
     return render_template(
-        'add_instrument.html',
-        title='Add An Instrument',
-        form=form
-    )
+                            'add_instrument.html',
+                            title='Add An Instrument',
+                            form=form)
 
 
 @bp.route('/add_student/<id>', methods=['GET', 'POST'])
@@ -150,12 +145,11 @@ def add_student(id):
             print("not valid")
 
     return render_template(
-        'add_student.html',
-        title='Add Student',
-        account=account,
-        h1=h1,
-        form=form
-    )
+                            'add_student.html',
+                            title='Add Student',
+                            account=account,
+                            h1=h1,
+                            form=form)
 
 
 @bp.route('/delete_account/<id>', methods=['GET', 'POST'])
@@ -178,10 +172,9 @@ def delete_account(id):
     return redirect(url_for('main.index'))
 
     return render_template(
-        'delete_account.html',
-        account=account,
-        title='Delete'
-    )
+                            'delete_account.html',
+                            account=account,
+                            title='Delete')
 
 
 @bp.route('/delete_student/<id>', methods=['GET', 'POST'])
@@ -204,10 +197,9 @@ def delete_student(id):
     return redirect(url_for('main.index'))
 
     return render_template(
-        'delete_student.html',
-        student=student,
-        title='Delete'
-    )
+                            'delete_student.html',
+                            student=student,
+                            title='Delete')
 
 
 @bp.route('/delete_teacher/<id>', methods=['GET', 'POST'])
@@ -223,10 +215,9 @@ def delete_teacher(id):
     return redirect(url_for('main.index'))
 
     return render_template(
-        'delete_teacher.html',
-        teacher=teacher,
-        title='Delete'
-    )
+                            'delete_teacher.html',
+                            teacher=teacher,
+                            title='Delete')
 
 
 @bp.route('/edit_account/<id>', methods=['GET', 'POST'])

@@ -101,6 +101,8 @@ class Accounts(db.Model):  # needs key constrains
 
         return str
 
+    # should make it's own class instead of having these functions
+    # for accounts and students
     @classmethod
     def view_all_accounts(cls):
         accounts = Accounts.query.order_by(Accounts.primary_lname).all()
@@ -131,7 +133,6 @@ class Attendance(db.Model):
     was_present = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     student = db.relationship('Students', foreign_keys=[student_ID])
     account = db.relationship('Accounts', foreign_keys=[account_ID])
-    #  create relationship to students
 
 
 class Students(db.Model):  # needs key constraints, I think
@@ -175,3 +176,15 @@ class Invoices(db.Model):
     payment_date = db.Column(db.DateTime(50))
 
 
+class Lessons(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    student_ID = db.Column(db.Integer, db.ForeignKey('students.id'))
+    teacher_ID = db.Column(db.Integer, db.ForeignKey('teachers.id'))
+    start_date = db.Column(db.DateTime, nullable=False)
+    end_date = db.Column(db.DateTime, nullable=True)
+    start_time = db.Column(db.DateTime, index=True, nullable=False)
+    is_hour = db.Column(db.Boolean, default=False, nullable=False)
+    is_recurring = db.Column(db.Boolean, default=True, nullable=False)
+    created_by = db.Column(db.String(50))
+    created_date = db.Column(db.DateTime, default=datetime.utcnow)
+    parent_even_id = db.column(db.Integer, db.foreignKey('lessons.id'))
