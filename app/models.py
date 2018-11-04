@@ -189,3 +189,26 @@ class Lessons(db.Model):
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     parent_event_id = db.column(db.Integer, db.ForeignKey('lessons.id'))
 
+
+class Recurring_pattern(db.Model):
+    lesson_ID = db.Column(
+                        db.Integer,
+                        db.ForeignKey('lessons.id'),
+                        primary_key=True,
+                        autoincrement=False)
+    recurring_type_id = db.Column(
+                                db.Integer,
+                                db.ForeignKey('recurring_type.id'))
+    separation_count = db.Column(db.Integer())
+    max_occurrences = db.Column(db.Integer())
+    day_of_week = db.Column(db.Integer())
+    week_of_month = db.Column(db.Integer())
+    day_of_month = db.Column(db.Integer())
+
+
+class Recurring_type(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    recurring_type = db.Column(db.String(15))
+
+
+    
