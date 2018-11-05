@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, g
 from flask_login import current_user, login_required
-from datetime import datetime
+from datetime import datetime, date
 from dateutil import tz
 from time import strftime
 from app import db
@@ -118,27 +118,45 @@ def add_instrument():
                             form=form)
 
 
-@bp.route('/add_lesson/<id>', methods=['POST'])
+@bp.route('/add_lesson/<id>', methods=['GET', 'POST'])
 @login_required
 def add_lesson(id):
     form = AddLessonForm()
     if form.validate_on_submit():
         teacher = form.teacher_ID.data
+        # lesson_time = datetime.strptime(form.start_time.data, '%I:%M %p')
+        that = form.start_date.data
+        # this = datetime.date(that)
+        # print(that.strftime("%A"))
+        # print(this)
+        pk = 1
+        user = "ian"
         lesson = Lessons(
-            student_ID=id,
+            student_ID=int(id),
             teacher_ID=teacher.id,
             start_date=form.start_date.data,
             end_date=form.end_date.data,
             start_time=form.start_time.data,
             is_hour=form.is_hour.data,
             is_recurring=form.is_recurring.data,
-            created_by=current_user
+            created_by=user,
+            parent_event_id=pk
         )
+        print(type(lesson.student_ID))
+        print(type(lesson.teacher_ID))
+        print(type(lesson.start_date))
+        print(type(lesson.end_date))
+        print(type(lesson.start_time))
+        print(type(lesson.is_hour))
+        print(type(lesson.is_recurring))
+        print(type(lesson.created_by))
+        print(lesson.created_by)
+        print(type(lesson.parent_event_id))
         db.session.add(lesson)
         db.session.commit()
         flash('Lesson added!')
 
-        return redirect(url_for('main.index'))
+        # return redirect(url_for('main.index'))
 
     else:
             print("not valid")

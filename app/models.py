@@ -144,7 +144,7 @@ class Students(db.Model):  # needs key constraints, I think
     last_name = db.Column(db.String(50))
     instrument = db.Column(db.String(50))
     notes = db.Column(db.String(500))
-
+    lesson = db.relationship('Lessons', backref='student', lazy='dynamic')
     # add bool archive col
 
     @classmethod
@@ -183,12 +183,13 @@ class Lessons(db.Model):  # add relationships
     teacher_ID = db.Column(db.Integer, db.ForeignKey('teachers.id'))
     start_date = db.Column(db.DateTime, nullable=False)
     end_date = db.Column(db.DateTime, nullable=True)
-    start_time = db.Column(db.DateTime, index=True, nullable=False)
+    start_time = db.Column(db.String(10), index=True, nullable=False)
     is_hour = db.Column(db.Boolean, default=False, nullable=False)
     is_recurring = db.Column(db.Boolean, default=True, nullable=False)
     created_by = db.Column(db.String(50))
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
     parent_event_id = db.column(db.Integer, db.ForeignKey('lessons.id'))
+    parent = db.relationship('lessons', backref='parent', lazy='dynamic')
 
 
 class Recurring_pattern(db.Model):
