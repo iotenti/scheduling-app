@@ -5,6 +5,29 @@
 <h3>{{ moment(g.today).format('LL') }}</h3>
 <h1>Hi, {{ user.first_name }}!</h1>
     <div>
+        <h1>lessons:</h1>
+        {% for lesson in lessons %}
+            <p>id: {{lesson.id}}</p>
+            <p>student_ID: {{lesson.student_ID}}</p>
+            <p>teacher_ID: {{lesson.teacher_ID}}</p>
+            <p>start_date: {{lesson.start_date}}</p>
+            <p>end_date: {{lesson.end_date}}</p>
+            <p>start_time: {{lesson.start_time}}</p>
+            <p>is_hour: {{lesson.is_hour}}</p>
+            <p>is_recurring: {{lesson.is_recurring}}</p>
+            <p>created_by: {{lesson.created_by}}</p>
+            <p>created_date: {{lesson.created_date}}</p>
+            <p>parent_event_id: {{lesson.parent_event_id}}</p>
+        {% endfor }
+    </div>
+    <div>
+        <h1>Recurring table</h1>
+        {% for recur in recurring %}
+            <p>id: {{ recur.id }}</p>
+            <p>type: {{ recur.recurring_type }}</p>
+        {% endfor %}
+    </div>
+    <div>
         <h1>attendece</h1>
         {% for attended in attendance %}
             <p><b>attendance id: {{attended.id}}</b></p>

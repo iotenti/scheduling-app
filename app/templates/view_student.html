@@ -14,7 +14,7 @@
                 <h3>Notes:</h3>
                 <p>{{ student.notes }}</p>
             </td>
-            <td>
+            <td width="256px">
             <!-- check if the student is checked in -->
             <!-- if not allow check in, otherwise allow undo-check in -->
                 {% if checked_in == False %}
@@ -23,11 +23,6 @@
                         <h3>Attendance:</h3>
                         {{ check_in_form.check_in(class_='btn btn-default') }}
                     </form>
-                    {% if attendance %}
-                        <div style="margin-top:5px;">
-                            <p>last seen: {{ moment(attendance.was_present).format('LLL') }}</p>
-                        </div>
-                    {% endif %}
                 {% elif checked_in == True %}
                     <form action="{{ url_for('main.view_student', id=student.id) }}" method="POST" role="form">
                         {{ undo_check_in_form.hidden_tag() }}
@@ -51,7 +46,10 @@
                     <a href="#" data-toggle="modal" data-target="#editModal">Delete</a>
                 </div>
             </td>
-            <td></td>
+            <td>
+                <h3>Add lesson</h3>
+                <a href="{{ url_for('main.add_lesson', id=student.id) }}">Add lesson</a>
+            </td>
             <td></td>
         </tr>
     </table>

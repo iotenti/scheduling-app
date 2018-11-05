@@ -33,6 +33,7 @@ class Teachers(UserMixin, db.Model):
     is_admin = db.Column(db.Boolean, default=False, nullable=True)
     notes = db.Column(db.String(500))
     students = db.relationship('Students', backref='teacher', lazy='dynamic')
+    lessons = db.relationship('Lessons', backref='teacher', lazy='dynamic')
     # format first and last name to capitalize
 
     def __repr__(self):
@@ -176,7 +177,7 @@ class Invoices(db.Model):
     payment_date = db.Column(db.DateTime(50))
 
 
-class Lessons(db.Model):
+class Lessons(db.Model):  # add relationships
     id = db.Column(db.Integer, primary_key=True)
     student_ID = db.Column(db.Integer, db.ForeignKey('students.id'))
     teacher_ID = db.Column(db.Integer, db.ForeignKey('teachers.id'))
@@ -209,6 +210,3 @@ class Recurring_pattern(db.Model):
 class Recurring_type(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     recurring_type = db.Column(db.String(15))
-
-
-    

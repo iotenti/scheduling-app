@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, ValidationError
+from wtforms import StringField, SubmitField, TextAreaField, ValidationError, \
+    BooleanField
 from wtforms.validators import DataRequired, Email, Optional
+from wtforms.fields.html5 import DateField
 from app.models import Teachers, Instruments, Accounts
 from wtforms_alchemy import QuerySelectField
 from sqlalchemy import or_
@@ -66,7 +68,7 @@ class AddAccountForm(FlaskForm):
 
             if self.secondary_cell_phone.data is not None:
                 self.secondary_cell_phone.data = self.secondary_cell_phone.data
-                
+
             if self.secondary_home_phone.data is not None:
                 self.secondary_home_phone.data = self.secondary_home_phone.data
 
@@ -225,3 +227,19 @@ class AttendanceForm(FlaskForm):
     checked_in = SubmitField('Checked In')
 
 
+class AddLessonForm(FlaskForm):
+
+    def get_teachers():
+        return Teachers.query
+
+    teacher_ID = QuerySelectField(
+                                'Select teacher...',
+                                query_factory=get_teachers,
+                                allow_blank=False,
+                                validators=[DataRequired()])
+    start_date = DateField('Start Date', format='%Y-%m-%d')
+    end_date = DateField('End Date', format='%Y-%m-%d')
+    start_time = StringField('Lesson time')
+    is_hour = BooleanField('Hour lesson?')
+    is_recurring = BooleanField('Recurring?')
+    submit = SubmitField('Submit')

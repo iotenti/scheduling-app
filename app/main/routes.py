@@ -4,10 +4,11 @@ from datetime import datetime
 from dateutil import tz
 from time import strftime
 from app import db
-from app.models import Teachers, Accounts, Students, Instruments, Attendance
+from app.models import Teachers, Accounts, Students, Instruments, Attendance, \
+    Recurring_type, Lessons
 from app.main import bp
 from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm, \
-    AttendanceForm
+    AttendanceForm, AddLessonForm
 from app.auth.forms import EditTeacherForm
 
 
@@ -31,14 +32,18 @@ def index():
     students = Students.query.all()
     accounts = Accounts.query.all()
     user = current_user
+    recurring = Recurring_type.query.all()
+    lessons = Lessons.query.all()
 
     return render_template(
                             'index.html',
                             title='Home',
                             user=user,
+                            lessons=lessons,
                             students=students,
                             accounts=accounts,
                             attendance=attendance,
+                            recurring=recurring,
                             instruments=instruments)
 
 
@@ -113,6 +118,37 @@ def add_instrument():
                             form=form)
 
 
+@bp.route('/add_lesson/<id>', methods=['POST'])
+@login_required
+def add_lesson(id):
+    form = AddLessonForm()
+    if form.validate_on_submit():
+        teacher = form.teacher_ID.data
+        lesson = Lessons(
+            student_ID=id,
+            teacher_ID=teacher.id,
+            start_date=form.start_date.data,
+            end_date=form.end_date.data,
+            start_time=form.start_time.data,
+            is_hour=form.is_hour.data,
+            is_recurring=form.is_recurring.data,
+            created_by=current_user
+        )
+        db.session.add(lesson)
+        db.session.commit()
+        flash('Lesson added!')
+
+        return redirect(url_for('main.index'))
+
+    else:
+            print("not valid")
+
+    return render_template(
+                            'add_lesson.html',
+                            title='Add Lesson',
+                            form=form)
+
+
 @bp.route('/add_student/<id>', methods=['GET', 'POST'])
 @login_required
 # pass account id in link - use to add student
@@ -125,7 +161,7 @@ def add_student(id):
 
         teacher = form.teacher_ID.data
         instrument = form.instrument.data
-        # add formatting so names are capitolized
+        # add formatting so names are capitalized
         student = Students(
 
             account_ID=id,
@@ -409,7 +445,7 @@ def view_student(id):
         # convert time zone to local time zone
         my_time_zone = utc.astimezone(to_zone)
         # check to see if student was checked in today
-        if (today_my_time.strftime('%Y-%m-%d') 
+        if (today_my_time.strftime('%Y-%m-%d')
                 == my_time_zone.strftime('%Y-%m-%d')):
             # set check_in = true, so template won't display check in option
             print(my_time_zone)
