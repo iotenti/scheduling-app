@@ -24,13 +24,31 @@
                 {{ form.is_hour }}
             </div>
             <div class="form-group">
-                {{ form.is_recurring.label }}
-                {{ form.is_recurring }}
+                <label>yes?
+                    <!-- <span class="checkmark" id="recurringLessonCheck"></span> -->
+                    <input type="checkbox" id="recurringLessonCheck" name="is_recurring">
+                </label>
+            </div>
+            <div class="hidden" id="recurringLessonContainer">
+                <!-- why no style -->
+                <div class="recurring-lesson-radio-menu" style="margin-right:15px;">
+                    <div>
+                        <input type="radio" name="recurring" value="weekly" checked />
+                        <label for="weekly">weekly</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="recurring" value="bi-weekly" />
+                        <label for="bi-weekly">bi-weekly</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="recurring" value="monthly" />
+                        <label for="monthly">monthly</label>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 {{ form.submit(class_='btn btn-primary') }}
             </div>
-                
         </div>
     </div>
 </form>

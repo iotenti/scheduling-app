@@ -133,9 +133,19 @@ h3 a:hover {
 }
 
 /* Create a custom checkbox */
-.checkmark {
+.checkmark-admin {
   position: absolute;
   border: 1px solid rgb(207, 15, 15);
+  border-radius: 4px;
+  top: 0;
+  left: 0;
+  height: 23px;
+  width: 25px;
+  background-color: #eee;
+}
+
+.checkmark {
+  position: absolute;
   border-radius: 4px;
   top: 0;
   left: 0;
@@ -180,7 +190,10 @@ h3 a:hover {
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
-
+.recurring-lesson-radio-menu{
+  margin-right: 15px;
+  margin-bottom: 10px; /* why */
+}
 /*
 .wrapper {
     display: grid;

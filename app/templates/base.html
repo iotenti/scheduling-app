@@ -169,6 +169,8 @@
         var studentsLink = $('#studentsLink')
         var accountsContainer = $("#viewAccounts")
         var studentsContainer = $("#viewStudents")
+        var recurringLessonCheck = $("#recurringLessonCheck")
+        var recurringLessonContainer = $("#recurringLessonContainer") 
         
         function hide(e){
             if(!accountsLink.is(e.target) && !accountsContainer.hasClass("hidden")){
@@ -182,6 +184,9 @@
         });
         studentsLink.click(function(e){
             studentsContainer.toggleClass("hidden");
+        });
+        recurringLessonCheck.click(function(e){
+            recurringLessonContainer.toggleClass("hidden");
         });
        document.addEventListener('mouseup', hide, false);
     });
