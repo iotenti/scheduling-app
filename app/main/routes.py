@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, g
 from flask_login import current_user, login_required
 from datetime import datetime, date
+import calendar
 from dateutil import tz
 from time import strftime
 from app import db
@@ -125,6 +126,8 @@ def add_lesson(id):
     if form.validate_on_submit():
         teacher = form.teacher_ID.data
         user = str(current_user)
+        # might want to change is_hour in model to end
+        # _time and store that instead, or also
         lesson = Lessons(
             student_ID=int(id),
             teacher_ID=teacher.id,
@@ -134,12 +137,27 @@ def add_lesson(id):
             is_recurring=form.is_recurring.data,
             created_by=user
         )
-        # if is_recurring is True:
-
-        db.session.add(lesson)
-        db.session.commit()
+        if form.recurring_radio.data == 'weekly':
+            print('week')
+            lesson.is_recurring = True
+        elif form.recurring_radio.data == 'bi-weekly':
+            print('biweek')
+            lesson.is_recurring = True
+        elif form.recurring_radio.data == 'monthly':
+            print('monthly')
+            lesson.is_recurring = True
+        elif form.recurring_radio.data == 'not_recurring':
+            print(form.recurring_radio.data)
+            lesson.is_recurring = False
+        year = int(lesson.start_date.strftime('%Y'))
+        month = int(lesson.start_date.strftime('%m'))
+        day = int(lesson.start_date.strftime('%d'))
+        day_of_week = calendar.weekday(year, month, day)
+        print(day_of_week)
+        # db.session.add(lesson)
+        # db.session.commit()
         flash('Lesson added!')
-
+        
         # return redirect(url_for('main.index'))
 
     else:

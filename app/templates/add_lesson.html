@@ -33,16 +33,8 @@
                 <!-- why no style -->
                 <div class="recurring-lesson-radio-menu" style="margin-right:15px;">
                     <div>
-                        <input type="radio" name="recurring" value="weekly" checked />
-                        <label for="weekly">weekly</label>
-                    </div>
-                    <div>
-                        <input type="radio" name="recurring" value="bi-weekly" />
-                        <label for="bi-weekly">bi-weekly</label>
-                    </div>
-                    <div>
-                        <input type="radio" name="recurring" value="monthly" />
-                        <label for="monthly">monthly</label>
+                        {{ form.recurring_radio.label }}
+                        {{ form.recurring_radio }}
                     </div>
                 </div>
             </div>

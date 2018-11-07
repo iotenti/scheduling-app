@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, ValidationError, \
-    BooleanField
+    BooleanField, RadioField
 from wtforms.validators import DataRequired, Email, Optional
 from wtforms.fields.html5 import DateField
 from app.models import Teachers, Instruments, Accounts
@@ -242,4 +242,13 @@ class AddLessonForm(FlaskForm):
     start_time = StringField('Lesson time')
     is_hour = BooleanField('Hour lesson?')
     is_recurring = BooleanField('Recurring?')
+    recurring_radio = RadioField(
+                                'Choose...',
+                                coerce=str,
+                                choices=[
+                                    ('weekly', 'Weekly'),
+                                    ('bi-weekly', 'Bi-weekly'),
+                                    ('monthly', 'Monthly'),
+                                    ('not_recurring', 'Not Recurring')
+                                ])
     submit = SubmitField('Submit')

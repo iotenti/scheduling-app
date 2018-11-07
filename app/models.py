@@ -188,6 +188,36 @@ class Lessons(db.Model):  # add relationships
     created_by = db.Column(db.String(50))
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
 
+    @classmethod
+    def before_commit(cls, session):
+        session._changes = {
+            'add': list(session.new),
+            'update': list(session.dirty),
+            'delete': list(session.deleted)
+        }
+
+#     @classmethod
+#     def after_commit(cls, session):
+#         for obj in session._changes['add']:
+#             # if recurring do this: else do nothing
+#             lession_ID = obj.id
+#             recurring_type = obj.recurring_radio
+#             start_date = obj.start_date
+#         session._changes = None
+#         # get recurring type id
+#         recurring_type_id = Recurring_type.query.filter_by(
+#             recurring_type=recurring_type).first()
+#         # get day of week for start_date
+#         calendar.weekday(start_date)
+#         # insert record in recurring_pattern table with lesson_ID
+#         # perform separation_count math on day_of_week or whatever
+
+
+# db.event.listen(db.session, 'before_commit', Lessons.before_commit)
+# db.event.listen(db.session, 'after_commit', Lessons.after_commit)
+
+
+
 
 class Recurring_pattern(db.Model):
     lesson_ID = db.Column(
