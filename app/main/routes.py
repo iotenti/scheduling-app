@@ -6,7 +6,7 @@ from dateutil import tz
 from time import strftime
 from app import db
 from app.models import Teachers, Accounts, Students, Instruments, Attendance, \
-    Recurring_type, Lessons
+    Recurring_type, Lessons, Week_days
 from app.main import bp
 from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm, \
     AttendanceForm, AddLessonForm
@@ -35,7 +35,7 @@ def index():
     user = current_user
     recurring = Recurring_type.query.all()
     lessons = Lessons.query.all()
-
+    
     return render_template(
                             'index.html',
                             title='Home',
@@ -153,7 +153,14 @@ def add_lesson(id):
         month = int(lesson.start_date.strftime('%m'))
         day = int(lesson.start_date.strftime('%d'))
         day_of_week = calendar.weekday(year, month, day)
-        print(day_of_week)
+
+        if recurring_type == 'weekly':
+            separation_count = 0
+        elif recurring_type == 'bi-weekly':
+            separation_count = 1
+        elif recurring_type == 'monthly':
+            separation_count = 2
+        # insert record in recurring_pattern table with lesson_ID
         # db.session.add(lesson)
         # db.session.commit()
         flash('Lesson added!')
