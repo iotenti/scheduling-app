@@ -4,6 +4,13 @@
 <div class="container">
 <h3>{{ moment(g.today).format('LL') }}</h3>
 <h1>Hi, {{ user.first_name }}!</h1>
+<div>
+    <h1>Days:</h1>
+    {% for day in days %}
+        <p>id: {{day.id}}</p>
+        <p>days: {{day.day_of_week}}</p>
+    {% endfor %}
+</div>
     <div>
         <h1>lessons:</h1>
         {% for lesson in lessons %}

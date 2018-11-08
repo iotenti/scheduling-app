@@ -35,7 +35,8 @@ def index():
     user = current_user
     recurring = Recurring_type.query.all()
     lessons = Lessons.query.all()
-    
+    days = Week_days.query.all()
+    flash('Fix teacher admin check box')
     return render_template(
                             'index.html',
                             title='Home',
@@ -45,6 +46,7 @@ def index():
                             accounts=accounts,
                             attendance=attendance,
                             recurring=recurring,
+                            days=days,
                             instruments=instruments)
 
 
@@ -154,12 +156,6 @@ def add_lesson(id):
         day = int(lesson.start_date.strftime('%d'))
         day_of_week = calendar.weekday(year, month, day)
 
-        if recurring_type == 'weekly':
-            separation_count = 0
-        elif recurring_type == 'bi-weekly':
-            separation_count = 1
-        elif recurring_type == 'monthly':
-            separation_count = 2
         # insert record in recurring_pattern table with lesson_ID
         # db.session.add(lesson)
         # db.session.commit()

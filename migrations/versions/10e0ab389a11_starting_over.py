@@ -1,8 +1,8 @@
-"""this work?
+"""starting over
 
-Revision ID: b868ffe6e53d
+Revision ID: 10e0ab389a11
 Revises: 
-Create Date: 2018-11-04 11:26:15.406501
+Create Date: 2018-11-08 14:15:27.263291
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'b868ffe6e53d'
+revision = '10e0ab389a11'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -62,6 +62,11 @@ def upgrade():
     )
     op.create_index(op.f('ix_teachers_email'), 'teachers', ['email'], unique=True)
     op.create_index(op.f('ix_teachers_username'), 'teachers', ['username'], unique=True)
+    op.create_table('week_days',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('day_of_week', sa.String(length=2), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('invoices',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('account_id', sa.Integer(), nullable=True),
@@ -102,7 +107,8 @@ def upgrade():
     sa.Column('teacher_ID', sa.Integer(), nullable=True),
     sa.Column('start_date', sa.DateTime(), nullable=False),
     sa.Column('end_date', sa.DateTime(), nullable=True),
-    sa.Column('start_time', sa.DateTime(), nullable=False),
+    sa.Column('start_time', sa.String(length=10), nullable=False),
+    sa.Column('end_time', sa.String(length=10), nullable=True),
     sa.Column('is_hour', sa.Boolean(), nullable=False),
     sa.Column('is_recurring', sa.Boolean(), nullable=False),
     sa.Column('created_by', sa.String(length=50), nullable=True),
@@ -115,11 +121,10 @@ def upgrade():
     op.create_table('recurring_pattern',
     sa.Column('lesson_ID', sa.Integer(), autoincrement=False, nullable=False),
     sa.Column('recurring_type_id', sa.Integer(), nullable=True),
-    sa.Column('separation_count', sa.Integer(), nullable=True),
     sa.Column('max_occurrences', sa.Integer(), nullable=True),
-    sa.Column('day_of_week', sa.Integer(), nullable=True),
-    sa.Column('week_of_month', sa.Integer(), nullable=True),
+    sa.Column('day_of_week_ID', sa.Integer(), nullable=True),
     sa.Column('day_of_month', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['day_of_week_ID'], ['week_days.id'], ),
     sa.ForeignKeyConstraint(['lesson_ID'], ['lessons.id'], ),
     sa.ForeignKeyConstraint(['recurring_type_id'], ['recurring_type.id'], ),
     sa.PrimaryKeyConstraint('lesson_ID')
@@ -137,6 +142,7 @@ def downgrade():
     op.drop_table('students')
     op.drop_index(op.f('ix_invoices_invoice_date'), table_name='invoices')
     op.drop_table('invoices')
+    op.drop_table('week_days')
     op.drop_index(op.f('ix_teachers_username'), table_name='teachers')
     op.drop_index(op.f('ix_teachers_email'), table_name='teachers')
     op.drop_table('teachers')
