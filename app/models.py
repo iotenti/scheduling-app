@@ -237,16 +237,20 @@ class Recurring_pattern(db.Model):
     recurring_type_id = db.Column(
                                 db.Integer,
                                 db.ForeignKey('recurring_type.id'))
-    max_occurrences = db.Column(db.Integer())
+    max_occurrences = db.Column(db.Integer(), nullable=True)
     day_of_week_ID = db.Column(db.Integer(),
                                db.ForeignKey('week_days.id'))
-    day_of_month = db.Column(db.Integer())
+    day_of_month = db.Column(db.String(2))
 
 
 class Week_days(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    cal_ID = db.Column(db.Integer())
     day_of_week = db.Column(db.String(2))
     day = db.relationship('Recurring_pattern', backref='day', lazy='dynamic')
+
+    def __repr__(self):
+        return self.day_of_week
 
 
 class Recurring_type(db.Model):

@@ -134,28 +134,29 @@ def add_lesson(id):
             student_ID=int(id),
             teacher_ID=teacher.id,
             start_date=form.start_date.data,
+            end_date=form.end_date.data,
             start_time=form.start_time.data,
             is_hour=form.is_hour.data,
             is_recurring=form.is_recurring.data,
             created_by=user
         )
         if form.recurring_radio.data == 'weekly':
-            print('week')
             lesson.is_recurring = True
         elif form.recurring_radio.data == 'bi-weekly':
-            print('biweek')
             lesson.is_recurring = True
         elif form.recurring_radio.data == 'monthly':
-            print('monthly')
             lesson.is_recurring = True
         elif form.recurring_radio.data == 'not_recurring':
-            print(form.recurring_radio.data)
             lesson.is_recurring = False
         year = int(lesson.start_date.strftime('%Y'))
         month = int(lesson.start_date.strftime('%m'))
         day = int(lesson.start_date.strftime('%d'))
         day_of_week = calendar.weekday(year, month, day)
-
+        day_of_week = Week_days.query.filter_by(cal_ID=day_of_week).first()
+        p_day = lesson.start_date.strftime('%d')
+        print(type(p_day))
+        
+        
         # insert record in recurring_pattern table with lesson_ID
         # db.session.add(lesson)
         # db.session.commit()
