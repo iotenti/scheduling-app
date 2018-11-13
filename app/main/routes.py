@@ -2,11 +2,12 @@ from flask import render_template, flash, redirect, url_for, request, g
 from flask_login import current_user, login_required
 from datetime import datetime, date
 import calendar
+import icalendar
 from dateutil import tz
 from time import strftime
 from app import db
 from app.models import Teachers, Accounts, Students, Instruments, Attendance, \
-    Recurring_type, Lessons, Week_days
+    Recurring_type, Lessons, Week_days, Recurring_pattern
 from app.main import bp
 from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm, \
     AttendanceForm, AddLessonForm
@@ -34,14 +35,18 @@ def index():
     accounts = Accounts.query.all()
     user = current_user
     recurring = Recurring_type.query.all()
+    recurring_pattern = Recurring_pattern.query.all()
     lessons = Lessons.query.all()
     days = Week_days.query.all()
+    cal = Calendar()
+    cal['dtstart'] = '20050404T080000'
     flash('Fix teacher admin check box')
     return render_template(
                             'index.html',
                             title='Home',
                             user=user,
                             lessons=lessons,
+                            recurring_pattern=recurring_pattern,
                             students=students,
                             accounts=accounts,
                             attendance=attendance,
@@ -124,6 +129,7 @@ def add_instrument():
 @bp.route('/add_lesson/<id>', methods=['GET', 'POST'])
 @login_required
 def add_lesson(id):
+    flash('MAKE END DATE OPTIONAL')
     form = AddLessonForm()
     if form.validate_on_submit():
         teacher = form.teacher_ID.data
@@ -140,29 +146,29 @@ def add_lesson(id):
             is_recurring=form.is_recurring.data,
             created_by=user
         )
-        if form.recurring_radio.data == 'weekly':
-            lesson.is_recurring = True
-        elif form.recurring_radio.data == 'bi-weekly':
-            lesson.is_recurring = True
-        elif form.recurring_radio.data == 'monthly':
-            lesson.is_recurring = True
-        elif form.recurring_radio.data == 'not_recurring':
-            lesson.is_recurring = False
-        year = int(lesson.start_date.strftime('%Y'))
-        month = int(lesson.start_date.strftime('%m'))
-        day = int(lesson.start_date.strftime('%d'))
-        day_of_week = calendar.weekday(year, month, day)
-        day_of_week = Week_days.query.filter_by(cal_ID=day_of_week).first()
-        p_day = lesson.start_date.strftime('%d')
-        print(type(p_day))
-        
-        
+
+        # if form.recurring_radio.data == 'weekly':
+        #     lesson.is_recurring = True
+        # elif form.recurring_radio.data == 'bi-weekly':
+        #     lesson.is_recurring = True
+        # elif form.recurring_radio.data == 'monthly':
+        #     lesson.is_recurring = True
+        # elif form.recurring_radio.data == 'not_recurring':
+        #     lesson.is_recurring = False
+        # year = int(lesson.start_date.strftime('%Y'))
+        # month = int(lesson.start_date.strftime('%m'))
+        # day = int(lesson.start_date.strftime('%d'))
+        # day_of_week = calendar.weekday(year, month, day)
+        # day_of_week = Week_days.query.filter_by(cal_ID=day_of_week).first()
+        # p_day = lesson.start_date.strftime('%d')
+        # print(day_of_week.id)
+
         # insert record in recurring_pattern table with lesson_ID
-        # db.session.add(lesson)
-        # db.session.commit()
+        db.session.add(lesson)
+        db.session.commit()
         flash('Lesson added!')
-        
-        # return redirect(url_for('main.index'))
+
+        return redirect(url_for('main.index'))
 
     else:
             print("not valid")

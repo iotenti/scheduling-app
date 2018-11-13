@@ -1,6 +1,7 @@
 from hashlib import md5
 from time import time
 from datetime import datetime
+import calendar
 from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -178,6 +179,10 @@ class Invoices(db.Model):
 
 
 class Lessons(db.Model):  # add relationships
+    # datetimes will be stored in UTC
+    # times will be stored as a datetime with a zero date
+    # dates will be stored as a datetime with a zero time
+    # consider this stuff ^^
     id = db.Column(db.Integer, primary_key=True)
     student_ID = db.Column(db.Integer, db.ForeignKey('students.id'))
     teacher_ID = db.Column(db.Integer, db.ForeignKey('teachers.id'))
@@ -198,35 +203,55 @@ class Lessons(db.Model):  # add relationships
             'delete': list(session.deleted)
         }
 
-#     @classmethod
-#     def after_commit(cls, session):
-#         for obj in session._changes['add']:
-#             # if recurring do this: else do nothing
-#             lession_ID = obj.id
-#             recurring_type = obj.recurring_radio
-#             start_date = obj.start_date
-#         session._changes = None
+    @classmethod
+    def after_commit(cls, session):
 
-#         # get recurring type id
-#         recurring_type_id = Recurring_type.query.filter_by(
-#             recurring_type=recurring_type).first()
-#         # get day of week for start_date
-#         year = int(lesson.start_date.strftime('%Y'))
-#         month = int(lesson.start_date.strftime('%m'))
-#         day = int(lesson.start_date.strftime('%d'))
-#         day_of_week = calendar.weekday(year, month, day)
-#         # perform separation_count math on day_of_week or whatever
-#         if recurring_type == 'weekly':
-#             separation_count = 1
-#         elif recurring_type == 'bi-weekly':
-#             separation_count = 1
-#         elif recurring_type == 'monthly':
-#             separation_count = 2
-#         # insert record in recurring_pattern table with lesson_ID
+        for obj in session._changes['add']:
+            lesson_ID = obj.id
+            recurring_type = obj.recurring_radio
+            start_date = obj.start_date
+            recurring = obj.is_recurring
+        session._changes = None
+        if recurring is True:
+            # get recurring type id
+            recurring_type_id = Recurring_type.query.filter_by(
+                recurring_type=recurring_type).first()
+            # get day of week for start_date
+            year = int(obj.start_date.strftime('%Y'))
+            month = int(obj.start_date.strftime('%m'))
+            day = int(obj.start_date.strftime('%d'))
+            day_of_week = calendar.weekday(year, month, day)
+            day_of_week = Week_days.query.filter_by(cal_ID=day_of_week).first()
+            # store separation_count
+            if recurring_type == 'weekly':
+                separation_count = 1
+            elif recurring_type == 'bi-weekly':
+                separation_count = 2
+            elif recurring_type == 'monthly':
+                separation_count = 1
+            # get day of the month
+            day_of_month = start_date.strftime('%d')
+            # get max occurrences
+            # NEEDS TO BE DONE STILL
+
+            # insert record in recurring_pattern table
+            recurring_pattern = Recurring_pattern(
+                lession_ID=lesson_ID,
+                recurring_type_id=recurring_type_id.id,
+                max_occurrences=3,
+                separation_count=separation_count,
+                day_of_week_ID=day_of_week.id,
+                day_of_month=day_of_month
+            )
+            db.session.add(recurring_pattern)
+            db.session.commit()
+        else:
+            pass
 
 
-# db.event.listen(db.session, 'before_commit', Lessons.before_commit)
-# db.event.listen(db.session, 'after_commit', Lessons.after_commit)
+db.event.listen(db.session, 'before_commit', Lessons.before_commit)
+db.event.listen(db.session, 'after_commit', Lessons.after_commit)
+
 
 class Recurring_pattern(db.Model):
     lesson_ID = db.Column(
@@ -237,8 +262,9 @@ class Recurring_pattern(db.Model):
     recurring_type_id = db.Column(
                                 db.Integer,
                                 db.ForeignKey('recurring_type.id'))
-    max_occurrences = db.Column(db.Integer(), nullable=True)
-    day_of_week_ID = db.Column(db.Integer(),
+    max_occurrences = db.Column(db.Integer, nullable=True)
+    separation_count = db.Column(db.Integer)
+    day_of_week_ID = db.Column(db.Integer,
                                db.ForeignKey('week_days.id'))
     day_of_month = db.Column(db.String(2))
 

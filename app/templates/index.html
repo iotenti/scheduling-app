@@ -6,6 +6,18 @@
 <h1>Hi, {{ user.first_name }}!</h1>
 <div>
     <h1>Days:</h1>
+    {% for pattern in recurring_pattern %}
+        <p>lesson id: {{pattern.id}}</p>
+        <p>recurring type id: {{pattern.recurring_type_id}}</p>
+        <p>max_occurrences: {{pattern.max_occurrences}}</p>
+        <p>separation count: {{pattern.separation_count}}</p>
+        <p>day of week id: {{pattern.day_of_week_ID}}</p>
+        <p>day of month: {{pattern.day_of_month}}</p>
+        <br>
+    {% endfor %}
+</div>
+<div>
+    <h1>Days:</h1>
     {% for day in days %}
         <p>id: {{day.id}}</p>
         <p>days: {{day.day_of_week}}</p>
