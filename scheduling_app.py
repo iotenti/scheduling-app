@@ -1,6 +1,6 @@
 from app import create_app, db
 from app.models import Teachers, Lessons, Recurring_pattern, Week_days,\
-    Recurring_type
+    Recurring_type, User
 
 app = create_app()
 
@@ -9,5 +9,5 @@ app = create_app()
 def make_shell_context():
     return {'db': db, 'Teachers': Teachers, 'Lessons': Lessons,
             'Recurring_pattern': Recurring_pattern, 'Week_days': Week_days,
-            'Recurring_type': Recurring_type}
+            'Recurring_type': Recurring_type, 'User': User}
 # check out bottom of db chapter to expand

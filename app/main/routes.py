@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, g
 from flask_login import current_user, login_required
 from datetime import datetime, date
 import calendar
-import icalendar
+from ics import Calendar, Event
 from dateutil import tz
 from time import strftime
 from app import db
@@ -38,8 +38,11 @@ def index():
     recurring_pattern = Recurring_pattern.query.all()
     lessons = Lessons.query.all()
     days = Week_days.query.all()
+
     cal = Calendar()
-    cal['dtstart'] = '20050404T080000'
+    event = Event()
+    event.name = 'penus party'
+    event.begin = '20140101 00:00:00'
     flash('Fix teacher admin check box')
     return render_template(
                             'index.html',

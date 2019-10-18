@@ -19,26 +19,13 @@ from app import db, login
 # so I'm passing the function itself, and not the result of calling it).
 
 
-class Teachers(UserMixin, db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    first_name = db.Column(db.String(50))
-    last_name = db.Column(db.String(50))
-    phone_num = db.Column(db.String(10))
-    address = db.Column(db.String(120))
-    city = db.Column(db.String(50))
-    state = db.Column(db.String(2))
-    zipcode = db.Column(db.String(5))
-    is_admin = db.Column(db.Boolean, default=False, nullable=True)
-    notes = db.Column(db.String(500))
-    students = db.relationship('Students', backref='teacher', lazy='dynamic')
-    lessons = db.relationship('Lessons', backref='teacher', lazy='dynamic')
-    # format first and last name to capitalize
 
     def __repr__(self):
-        return '{} {}'.format(self.first_name, self.last_name)
+        return '{}'.format(self.username)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -64,12 +51,39 @@ class Teachers(UserMixin, db.Model):
                             algorithms=['HS256'])['reset_password']
         except:  # noqa: E722
             return
-        return Teachers.query.get(id)
+        return User.query.get(id)
 
 
 @login.user_loader
 def load_user(id):
-    return Teachers.query.get(int(id))
+    return User.query.get(int(id))
+
+
+class Teachers(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), index=True, unique=True)
+    email = db.Column(db.String(120), index=True, unique=True)
+    password_hash = db.Column(db.String(128))
+    first_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50))
+    phone_num = db.Column(db.String(10))
+    address = db.Column(db.String(120))
+    city = db.Column(db.String(50))
+    state = db.Column(db.String(2))
+    zipcode = db.Column(db.String(5))
+    is_admin = db.Column(db.Boolean, default=False, nullable=True)
+    notes = db.Column(db.String(500))
+    students = db.relationship('Students', backref='teacher', lazy='dynamic')
+    lessons = db.relationship('Lessons', backref='teacher', lazy='dynamic')
+    # format first and last name to capitalize
+
+    def __repr__(self):
+        return '{} {}'.format(self.first_name, self.last_name)
+
+    def avatar(self, size):
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
+            digest, size)
 
 
 class Accounts(db.Model):  # needs key constrains
@@ -203,54 +217,54 @@ class Lessons(db.Model):  # add relationships
             'delete': list(session.deleted)
         }
 
-    @classmethod
-    def after_commit(cls, session):
+    # @classmethod
+    # def after_commit(cls, session):
 
-        for obj in session._changes['add']:
-            lesson_ID = obj.id
-            recurring_type = obj.recurring_radio
-            start_date = obj.start_date
-            recurring = obj.is_recurring
-        session._changes = None
-        if recurring is True:
-            # get recurring type id
-            recurring_type_id = Recurring_type.query.filter_by(
-                recurring_type=recurring_type).first()
-            # get day of week for start_date
-            year = int(obj.start_date.strftime('%Y'))
-            month = int(obj.start_date.strftime('%m'))
-            day = int(obj.start_date.strftime('%d'))
-            day_of_week = calendar.weekday(year, month, day)
-            day_of_week = Week_days.query.filter_by(cal_ID=day_of_week).first()
-            # store separation_count
-            if recurring_type == 'weekly':
-                separation_count = 1
-            elif recurring_type == 'bi-weekly':
-                separation_count = 2
-            elif recurring_type == 'monthly':
-                separation_count = 1
-            # get day of the month
-            day_of_month = start_date.strftime('%d')
-            # get max occurrences
-            # NEEDS TO BE DONE STILL
+    #     for obj in session._changes['add']:
+    #         lesson_ID = obj.id
+    #         recurring_type = obj.recurring_radio
+    #         start_date = obj.start_date
+    #         recurring = obj.is_recurring
+    #     session._changes = None
+    #     if recurring is True:
+    #         # get recurring type id
+    #         recurring_type_id = Recurring_type.query.filter_by(
+    #             recurring_type=recurring_type).first()
+    #         # get day of week for start_date
+    #         year = int(obj.start_date.strftime('%Y'))
+    #         month = int(obj.start_date.strftime('%m'))
+    #         day = int(obj.start_date.strftime('%d'))
+    #         day_of_week = calendar.weekday(year, month, day)
+    #         day_of_week = Week_days.query.filter_by(cal_ID=day_of_week).first()
+    #         # store separation_count
+    #         if recurring_type == 'weekly':
+    #             separation_count = 1
+    #         elif recurring_type == 'bi-weekly':
+    #             separation_count = 2
+    #         elif recurring_type == 'monthly':
+    #             separation_count = 1
+    #         # get day of the month
+    #         day_of_month = start_date.strftime('%d')
+    #         # get max occurrences
+    #         # NEEDS TO BE DONE STILL
 
-            # insert record in recurring_pattern table
-            recurring_pattern = Recurring_pattern(
-                lession_ID=lesson_ID,
-                recurring_type_id=recurring_type_id.id,
-                max_occurrences=3,
-                separation_count=separation_count,
-                day_of_week_ID=day_of_week.id,
-                day_of_month=day_of_month
-            )
-            db.session.add(recurring_pattern)
-            db.session.commit()
-        else:
-            pass
+    #         # insert record in recurring_pattern table
+    #         recurring_pattern = Recurring_pattern(
+    #             lession_ID=lesson_ID,
+    #             recurring_type_id=recurring_type_id.id,
+    #             max_occurrences=3,
+    #             separation_count=separation_count,
+    #             day_of_week_ID=day_of_week.id,
+    #             day_of_month=day_of_month
+    #         )
+    #         db.session.add(recurring_pattern)
+    #         db.session.commit()
+    #     else:
+    #         pass
 
 
 db.event.listen(db.session, 'before_commit', Lessons.before_commit)
-db.event.listen(db.session, 'after_commit', Lessons.after_commit)
+# db.event.listen(db.session, 'after_commit', Lessons.after_commit)
 
 
 class Recurring_pattern(db.Model):
