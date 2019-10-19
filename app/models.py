@@ -59,6 +59,27 @@ def load_user(id):
     return User.query.get(int(id))
 
 
+class ContactType(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    contactType = db.Column(db.String(50))
+    cancelled_Date = db.Column(db.DateTime, nullable=True)
+
+    def __repr__(self):
+        return '{}'.format(self.contactType)
+
+# class Contact(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     first_name = db.Column(db.String(50))
+#     last_name = db.Column(db.String(50))
+#     address = db.Column(db.String(120))
+#     city = db.Column(db.String(50))
+#     state = db.Column(db.String(2))
+#     zipcode = db.Column(db.String(5))
+#     notes = db.Column(db.String(500))
+#     is_admin = db.Column(db.Boolean, default=False, nullable=True)
+    
+#     contactTypeID = db.Column(int forgein key)
+
 class Teachers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)

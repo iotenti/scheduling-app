@@ -17,6 +17,16 @@
     {% endfor %}
 </div>
 <div>
+    {% for contType in contactType %}
+        <p>ContactTypeID: {{contType.id}}</p>
+        <p>ContactType : {{contType.contactType}}</p>
+        <p>cancelled?: {{contType.cancelled_Date}}</p>
+        
+        <br>
+    {% endfor %}
+    </div>
+
+<div>
     <h1>Days:</h1>
     {% for day in days %}
         <p>id: {{day.id}}</p>

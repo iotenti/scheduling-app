@@ -7,7 +7,7 @@ from dateutil import tz
 from time import strftime
 from app import db
 from app.models import Teachers, Accounts, Students, Instruments, Attendance, \
-    Recurring_type, Lessons, Week_days, Recurring_pattern
+    Recurring_type, Lessons, Week_days, Recurring_pattern, ContactType
 from app.main import bp
 from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm, \
     AttendanceForm, AddLessonForm
@@ -38,6 +38,7 @@ def index():
     recurring_pattern = Recurring_pattern.query.all()
     lessons = Lessons.query.all()
     days = Week_days.query.all()
+    contactType = ContactType.query.all()
 
     cal = Calendar()
     event = Event()
@@ -48,6 +49,7 @@ def index():
                             'index.html',
                             title='Home',
                             user=user,
+                            contactType=contactType,
                             lessons=lessons,
                             recurring_pattern=recurring_pattern,
                             students=students,
