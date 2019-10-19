@@ -61,24 +61,28 @@ def load_user(id):
 
 class ContactType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    contactType = db.Column(db.String(50))
+    contact_type = db.Column(db.String(50))
     cancelled_Date = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
-        return '{}'.format(self.contactType)
+        return '{}'.format(self.id)
 
-# class Contact(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     first_name = db.Column(db.String(50))
-#     last_name = db.Column(db.String(50))
-#     address = db.Column(db.String(120))
-#     city = db.Column(db.String(50))
-#     state = db.Column(db.String(2))
-#     zipcode = db.Column(db.String(5))
-#     notes = db.Column(db.String(500))
-#     is_admin = db.Column(db.Boolean, default=False, nullable=True)
-    
-#     contactTypeID = db.Column(int forgein key)
+
+class Contact(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    contact_type_ID = db.Column(db.Integer, db.ForeignKey('ContactType.id'))
+    first_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50))
+    address = db.Column(db.String(120))
+    city = db.Column(db.String(50))
+    # make a new table for state and make this stateID = db.Column(db.Integer, db.ForeignKey('State.id'))
+    state = db.Column(db.String(2))
+    zipcode = db.Column(db.String(5))
+    notes = db.Column(db.String(500))
+    is_admin = db.Column(db.Boolean, default=False, nullable=True)
+    cancelled_date = db.Column(db.DateTime, nullable=True)
+    primary_contact = db.Column(db.Boolean, default=False, nullable=True)
+
 
 class Teachers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -122,10 +126,10 @@ class Accounts(db.Model):  # needs key constrains
     account_credit = db.Column(db.Float(10))
     secondary_home_phone = db.Column(db.String(10), nullable=True)
     students = db.relationship(
-                            'Students',
-                            backref='account',
-                            lazy='dynamic',
-                            cascade='delete')
+        'Students',
+        backref='account',
+        lazy='dynamic',
+        cascade='delete')
     invoices = db.relationship('Invoices', backref='account', lazy='dynamic')
 
     # investigate back_populate
@@ -198,9 +202,9 @@ class Students(db.Model):  # needs key constraints, I think
 
     def __repr__(self):
         return '{} {} - {}'.format(
-                                    self.first_name,
-                                    self.last_name,
-                                    self.instrument)
+            self.first_name,
+            self.last_name,
+            self.instrument)
 
 
 class Invoices(db.Model):
@@ -290,13 +294,13 @@ db.event.listen(db.session, 'before_commit', Lessons.before_commit)
 
 class Recurring_pattern(db.Model):
     lesson_ID = db.Column(
-                        db.Integer,
-                        db.ForeignKey('lessons.id'),
-                        primary_key=True,
-                        autoincrement=False)
+        db.Integer,
+        db.ForeignKey('lessons.id'),
+        primary_key=True,
+        autoincrement=False)
     recurring_type_id = db.Column(
-                                db.Integer,
-                                db.ForeignKey('recurring_type.id'))
+        db.Integer,
+        db.ForeignKey('recurring_type.id'))
     max_occurrences = db.Column(db.Integer, nullable=True)
     separation_count = db.Column(db.Integer)
     day_of_week_ID = db.Column(db.Integer,
