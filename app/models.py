@@ -68,9 +68,15 @@ class ContactType(db.Model):
         return '{}'.format(self.id)
 
 
+linkingContactCommunication = db.Table('linkingContactCommunication',
+    db.Column('contact_id', db.Integer, db.ForeignKey('contact.id'), primary_key=True),
+    db.Column('communication_id', db.Integer, db.ForeignKey('communication.id'), primary_key=True)
+)
+
+
 class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    contact_type_ID = db.Column(db.Integer, db.ForeignKey('contact_type.id'))
+    contact_type_id = db.Column(db.Integer, db.ForeignKey('contact_type.id'))
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
     address = db.Column(db.String(120))
@@ -82,6 +88,21 @@ class Contact(db.Model):
     is_admin = db.Column(db.Boolean, default=False, nullable=True)
     cancelled_date = db.Column(db.DateTime, nullable=True)
     primary_contact = db.Column(db.Boolean, default=False, nullable=True)
+    communication = db.relationship('Communication', secondary=linkingContactCommunication, lazy='subquery')
+       # ,backref=db.backref('contact', lazy=true))
+
+
+class Communication(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    communication_type_ID = db.Column(db.Integer, db.ForeignKey('communication_type.id'))
+    communication_data = db.Column(db.String(120))
+    cancelled_date = db.Column(db.DateTime, nullable=True)
+
+
+class CommunicationType(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    communication_type = db.Column(db.String(50))
+    cancelled_date = db.Column(db.DateTime, nullable=True)
 
 
 class Teachers(db.Model):
