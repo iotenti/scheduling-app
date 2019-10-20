@@ -58,10 +58,10 @@ class User(UserMixin, db.Model):
 def load_user(id):
     return User.query.get(int(id))
 
-
+# note to self, flask SQLAlchemy changes camelCase table names: e.g. contact_type 
 class ContactType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    contact_type = db.Column(db.String(50))
+    contactType = db.Column(db.String(50))
     cancelled_Date = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
@@ -70,7 +70,7 @@ class ContactType(db.Model):
 
 class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    contact_type_ID = db.Column(db.Integer, db.ForeignKey('ContactType.id'))
+    contact_type_ID = db.Column(db.Integer, db.ForeignKey('contact_type.id'))
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
     address = db.Column(db.String(120))

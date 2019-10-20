@@ -3,7 +3,8 @@
 {% block app_content %}
 <div class="container">
 <h3>{{ moment(g.today).format('LL') }}</h3>
-<h1>Hi, {{ user.first_name }}!</h1>
+<h1>Hi, {{ user.username }}!</h1>
+<h5>You tried to relate the ContactType and Contact tables, but you have failed at this. fix</h5>
 <div>
     <h1>Days:</h1>
     {% for pattern in recurring_pattern %}
