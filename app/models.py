@@ -88,8 +88,8 @@ class Contact(db.Model):
     is_admin = db.Column(db.Boolean, default=False, nullable=True)
     cancelled_date = db.Column(db.DateTime, nullable=True)
     primary_contact = db.Column(db.Boolean, default=False, nullable=True)
-    communication = db.relationship('Communication', secondary=linkingContactCommunication, lazy='subquery')
-       # ,backref=db.backref('contact', lazy=true))
+    communication = db.relationship('Communication', secondary=linkingContactCommunication, lazy='subquery',\
+        backref=db.backref('contact', lazy=True))
 
 
 class Communication(db.Model):
