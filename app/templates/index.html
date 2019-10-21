@@ -5,7 +5,7 @@
 <h3>{{ moment(g.today).format('LL') }}</h3>
 <h1>Hi, {{ user.username }}!</h1>
 <h5>You tried to relate the ContactType and Contact tables, but you have failed at this. fix</h5>
-<div>
+<!-- <div>
     <h1>Days:</h1>
     {% for pattern in recurring_pattern %}
         <p>lesson id: {{pattern.id}}</p>
@@ -16,7 +16,8 @@
         <p>day of month: {{pattern.day_of_month}}</p>
         <br>
     {% endfor %}
-</div>
+</div> -->
+<h1>contact type:</h1>
 <div>
     {% for contType in contactType %}
         <p>ContactTypeID: {{contType.id}}</p>
@@ -25,8 +26,47 @@
         
         <br>
     {% endfor %}
-    </div>
-
+</div>
+<div>
+    <h1>communication:</h1>
+    {% for com in communication%}
+        <p>id: {{com.id}}</p>
+        <p>communication_type_ID: {{com.communication_type_ID}}</p>
+        <p>communication_data : {{com.communication_data}}</p>
+        <p>cancelled_date: {{com.cancelled_date}}</p>
+        <p>{{ com }}</p>
+        <br>
+    {% endfor %}
+</div>
+<h1>communicationType:</h1>
+<div>
+    {% for coms in communicationType %}
+        <p>id: {{coms.id}}</p>
+        <p>communication_type: {{coms.communication_type}}</p>
+        <p>cancelled_date: {{coms.cancelled_date}}</p>
+        <br>
+    {% endfor %}
+</div>
+<h1>Contact:</h1>
+<div>
+    {% for cont in contact %}
+        <p>id: {{cont.id}}</p>
+        <p>contact_type_id: {{cont.contact_type_id}}</p>
+        <p>first_name : {{cont.first_name}}</p>
+        <p>last_name: {{cont.last_name}}</p>
+        <p>address: {{cont.address}}</p>
+        <p>city: {{cont.city}}</p>
+        <p>state: {{cont.state}}</p>
+        <p>zipcode: {{cont.zipcode}}</p>
+        <p>notes: {{cont.notes}}</p>
+        <p>is_admin: {{cont.is_admin}}</p>
+        <p>cancelled_date: {{cont.cancelled_date}}</p>
+        <p>primary_contact: {{cont.primary_contact}}</p>
+        <p>communication: {{cont.communication}}</p>
+        
+        <br>
+    {% endfor %}
+</div>
 <div>
     <h1>Days:</h1>
     {% for day in days %}

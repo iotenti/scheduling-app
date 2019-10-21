@@ -7,7 +7,8 @@ from dateutil import tz
 from time import strftime
 from app import db
 from app.models import Teachers, Accounts, Students, Instruments, Attendance, \
-    Recurring_type, Lessons, Week_days, Recurring_pattern, ContactType
+    Recurring_type, Lessons, Week_days, Recurring_pattern, ContactType, \
+    Contact, Communication, CommunicationType
 from app.main import bp
 from app.main.forms import AddAccountForm, AddStudentForm, AddInstrumentForm, \
     AttendanceForm, AddLessonForm
@@ -29,6 +30,10 @@ def before_request():
 @bp.route('/index')
 @login_required
 def index():
+    contact = Contact.query.all()
+    communication = Communication.query.all()
+    communicationType = CommunicationType.query.all()
+    #linkingContactCommunication = linkingContactCommunication.query.all()
     attendance = Attendance.query.all()
     instruments = Instruments.query.all()
     students = Students.query.all()
@@ -42,12 +47,15 @@ def index():
 
     cal = Calendar()
     event = Event()
-    event.name = 'penus party'
+    event.name = 'fun party'
     event.begin = '20140101 00:00:00'
     flash('Fix teacher admin check box')
     return render_template(
                             'index.html',
                             title='Home',
+                            contact=contact,
+                            communication=communication,
+                            communicationType=communicationType,
                             user=user,
                             contactType=contactType,
                             lessons=lessons,

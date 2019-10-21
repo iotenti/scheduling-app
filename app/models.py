@@ -98,11 +98,17 @@ class Communication(db.Model):
     communication_data = db.Column(db.String(120))
     cancelled_date = db.Column(db.DateTime, nullable=True)
 
+    def __repr__(self):
+        return '{}'.format(self.communication_data)
+
 
 class CommunicationType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     communication_type = db.Column(db.String(50))
     cancelled_date = db.Column(db.DateTime, nullable=True)
+
+    def __repr__(self):
+        return '{}'.format(self.communication_type)
 
 
 class Teachers(db.Model):
